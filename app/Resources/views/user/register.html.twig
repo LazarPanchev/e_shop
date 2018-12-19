@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <div class="container body-content span=8 offset=2">
+        <div class="well">
+            <form method="post" class="form-horizontal" action="{{ path('users_register') }}" name="register"
+                  novalidate="novalidate">
+                <fieldset>
+                    <hr>
+                    <h2 class="intro-text text-center"><strong>Register</strong></h2>
+                    <hr>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="user_email">Email</label>
+                        <div class="col-sm-4">
+                            <input class="form-control  text-success" id="user_email" placeholder="Email"
+                                   type="email" name="user[email]" value="{{ user.email }}" required/>  <div class="text-danger" style="color: red">
+                                {{ form_errors(form.email) }}
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="user_password_first">Password</label>
+                        <div class="col-sm-4">
+                            <input type="password" class="form-control" id="user_password_first"
+                                   placeholder="Password" name="user[password][first]" required/>
+                            <div class="text-danger" style="color: red">
+                                {{ form_errors(form.password.first) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="user_password_second">Confirm Password</label>
+                        <div class="col-sm-4">
+                            <input type="password" class="form-control" id="user_password_second"
+                                   placeholder="Confirm Password" name="user[password][second]" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="user_full_name">Full Name</label>
+                        <div class="col-sm-4">
+                            <input class="form-control text-success" id="user_fullName" placeholder="Full Name"
+                                   type="text" name="user[fullName]" value="{{ user.fullName }}"/>
+                            <div class="text-danger" style="color: red">
+                                {{ form_errors(form.fullName) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="user_address">Address</label>
+                        <div class="col-sm-4">
+                            <input class="form-control text-success" id="user_address" placeholder="Address"
+                                   type="text" name="user[address]" value="{{ user.address }}"/>
+                            <div class="text-danger" style="color: red">
+                                {{ form_errors(form.address) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="user_phone">Phone</label>
+                        <div class="col-sm-4">
+                            <input class="form-control text-success" id="user_phone" placeholder="Phone"
+                                   type="text" name="user[phone]" value="{{ user.phone }}"/>
+                            <div class="text-danger" style="color: red">
+                                {{ form_errors(form.phone) }}
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="user_full_name">Money</label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="user_money" placeholder="Money"
+                                   type="number" name="user[money]" value="{{ user.money }}"/>
+                            <div class="text-danger" style="color: red">
+                                {{ form_errors(form.money) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('register') }}"/>
+
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-4">
+                            <a class="btn btn-primary" href="{{ path('homepage') }}">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
+                    </div>
+                    {{ form_row(form._token) }}
+                </fieldset>
+            </form>
+        </div>
+    </div>
+{% endblock %}

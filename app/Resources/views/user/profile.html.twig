@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}<div class="jumbotron">
+    <h1 class="display-3">My Profile</h1>
+    {# @var user \AppBundle\Entity\User #}
+    <p class="lead">{{ user.fullName }}</p>
+    <hr class="my-4">
+    <p class="lead">{{ user.money }} lv.</p>
+    <hr class="my-4">
+    <p>Here you can make a deposit.</p>
+    <p class="lead">
+        <a class="btn btn-primary btn-lg" href="#" role="button">Deposit</a>
+    </p>
+    <div class="modal fade" id="modalForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h4 class="modal-title w-100 font-weight-bold">Make deposit</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body mx-3">
+                    <div class="md-form mb-5">
+                        <i class="fa fa-envelope prefix grey-text"></i>
+                        <label data-error="wrong" data-success="right" for="defaultForm-email">Amount</label>
+                        <input type="email" id="defaultForm-email" class="form-control validate">
+
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-center">
+                    <button id="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <a href="" class="btn btn-default btn-rounded mb-4" data-toggle="modal" data-target="#modalForm">Deposit</a>
+    </div>
+</div>
+    <script>
+        $('#submit').on('click', function (event) {
+            let sum = $('#amount').val();
+            let amount = {amount:sum};
+            let request = {
+                method: 'POST',
+                url: '/api/users/deposit',
+                data: JSON.stringify(amount),
+                success: alert(function () {
+                    
+                }),
+                error: alert(function () {
+                    
+                })
+            };
+            $.ajax(request)
+        });
+    </script>
+
+{% endblock %}
+
