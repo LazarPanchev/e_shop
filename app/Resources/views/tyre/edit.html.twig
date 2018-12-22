@@ -1,0 +1,119 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <div class="container body-content span=8 offset=2">
+        <div class="well">
+            <form method="post" enctype="multipart/form-data" class="form-horizontal" action="{{ path('tyres_edit', {id: tyre.id}) }}"
+                  novalidate="novalidate">
+                <fieldset>
+                    <hr>
+                    <h2 class="intro-text text-center"><strong>Edit tyre</strong></h2>
+                    <hr>
+                    <div class="form-group col-sm-4">
+                        {{ form_label(form.category) }}
+                        <div >
+                            {{ form_widget(form.category) }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="tyre_make">Brand</label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="tyre_make" placeholder="Brand"
+                                   type="text" name="tyre[make]" value="{{ tyre.make }}" required/>
+                            <div class="text-danger" style="color: red">
+                                {{ form_errors(form.make) }}
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="tyre_model">Model</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="tyre_model"
+                                   placeholder="Model" name="tyre[model]" value="{{ tyre.model }}" required/>
+                            <div class="text-danger" style="color: red">
+                                {{ form_errors(form.model) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="tyre_width">Tyre Width</label>
+                        <div class="col-sm-4">
+                            <input type="number" class="form-control" id="tyre_width"
+                                   placeholder="Width" name="tyre[width]" value="{{ tyre.width }}" required/>
+                            <div class="text-danger" style="color: red">
+                                {{ form_errors(form.width) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="tyre_height">Tyre Height</label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="tyre_height" placeholder="Height"
+                                   type="text" name="tyre[height]" value="{{ tyre.height }}" required/>
+                            <div class="text-danger" style="color: red">
+                                {{ form_errors(form.height) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="tyre_diameter">Tyre Diameter</label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="tyre_diameter" placeholder="Diameter"
+                                   type="text" name="tyre[diameter]" value="{{ tyre.diameter }}"/>
+                            <div class="text-danger" style="color: red">
+                                {{ form_errors(form.diameter) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="tyre_speedIndex"
+                               data-toggle="tooltip" data-placement="right" title="The Speed index is represented by a letter and associated with the tyre's maximum speed capability when operating at its maximum load carrying capacity." data-original-title="Tooltip on right">Speed Index</label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="tyre_speedIndex" placeholder="Speed Index"
+                                   type="text" name="tyre[speedIndex]" value="{{ tyre.speedIndex }}"/>
+                            <div class="text-danger" style="color: red">
+                                {{ form_errors(form.speedIndex) }}
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="tyre_speedIndex"
+                               data-toggle="tooltip" data-placement="right" title="The load index is an industry standard that indicates the maximum load each tyre is designed to carry when inflated to the recommended pressure." data-original-title="Tooltip on right">Load Index</label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="tyre_loadIndex" placeholder="Load Index"
+                                   type="number" name="tyre[loadIndex]" value="{{ tyre.loadIndex }}"/>
+                            <div class="text-danger" style="color: red">
+                                {{ form_errors(form.loadIndex) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="tyre_image">Image</label>
+                        <div class="col-sm-4">
+                            <input type="file" accept=".jpg, .jpeg, .png" class="form-control" id="tyre_image" placeholder="Image"
+                                   name="tyre[image]" />
+                            <div class="text-danger" style="color: red">
+                                {{ form_errors(form.image) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-4">
+                            <a class="btn btn-primary" href="{{ path('homepage') }}">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Edit</button>
+                        </div>
+                    </div>
+                    {{ form_row(form._token) }}
+                </fieldset>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+

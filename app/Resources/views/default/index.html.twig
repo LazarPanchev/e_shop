@@ -12,19 +12,25 @@
                   <p><a class="btn btn-primary btn-lg" href="{{ path('users_profile', {'id': user.id }) }}" role="button">My profile &raquo;</a></p>
                </div>
                <div class="nav-item">
-                  <p><a class="btn btn-primary btn-lg" href="#" role="button">Logout &raquo;</a></p>
+                  <p><a class="btn btn-primary btn-lg" href="{{ path('tyres_create') }}" role="button">Sell Tyres &raquo;</a></p>
                </div>
-            {% endif %}
+               <div class="nav-item">
+                  <p><a class="btn btn-primary btn-lg" href="#" role="button">Add Promotion &raquo;</a></p>
+               </div>
+               <div class="nav-item">
+                  <p><a class="btn btn-primary btn-lg" href="{{ path('tyres_view_all') }}" role="button">View all tyres &raquo;</a></p>
+               </div>
+            {% else %}
             <ul class="nav flex-column">
                <li class="nav-item">
                   <p><a class="btn btn-primary btn-lg" href="#" role="button">Register &raquo;</a></p>
                </li>
                <li class="nav-item">
-                  <p><a class="btn btn-primary btn-lg" href="#" role="button">Login &raquo;</a></p>
+                  <p><a class="btn btn-primary btn-lg" href="{{ path('security_login') }}" role="button">Login &raquo;</a></p>
                </li>
 
             </ul>
-
+            {% endif %}
          </div>
       </div>
        {% block body %}{% endblock %}

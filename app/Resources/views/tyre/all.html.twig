@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <h1 class="text-center">Tyres</h1>
+    <hr>
+    <div class="container">
+        {# display navigation #}
+        <div class="pagination justify-content-center">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+
+        <div class="list-group">
+            {% for tyre in pagination %}
+                <a href="{{ path('tyres_view_one', {'id': tyre.id}) }}" class="list-group-item active">
+                    <!--Heading with class .list-group-item-heading-->
+                    <span>
+                    <h3 class="text-warning">{{ tyre.make }} {{ tyre.model }}</h3>
+                <h4 class="list-group-item-heading">{{ tyre.width }}/{{ tyre.height }}
+                    R{{ tyre.diameter }} {{ tyre.speedIndex }} {{ tyre.loadIndex }}</h4>
+                    <img class="media-object img-rounded img-responsive" width="100px" height="200px%"
+                         src="{{ asset('uploads/images/tyres/' ~ tyre.image) }}"
+                         alt="placehold.it/350x250">
+                </span>
+                    <!--Paragraph with class .list-group-item-text -->
+                    <p class="list-group-item-text">Viewed: {{ tyre.viewCount }}</p>
+                    <p class="list-group-item-text">Seller: {{ tyre.seller.fullName }}</p>
+                    <p class="list-group-item-text">Category: {{ tyre.category.name }}s</p>
+                    <p class="list-group-item-text">Added On: {{ tyre.createDate|date('d-m-y H:i:s') }}s</p>
+                </a>
+                <button type="button" class="btn btn-primary btn-lg btn-block"> Buy Now</button>
+                <hr>
+            {% endfor %}
+        </div>
+    </div>
+
+    {# display navigation #}
+    <div class="pagination justify-content-center">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+{% endblock %}

@@ -126,11 +126,18 @@ class User implements UserInterface
      */
     private $roles;
 
+    /**
+     * @var ArrayCollection|Tyre[]
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tyre", mappedBy="seller", cascade={"remove"})
+     */
+    private $tyres;
+
     public function __construct()
     {
         $this->dateCreated = new \DateTime('now');
         $this->isBanned = false;
-        $this->roles=new ArrayCollection();
+        $this->roles = new ArrayCollection();
+        $this->tyres= new ArrayCollection();
     }
 
 
@@ -353,8 +360,8 @@ class User implements UserInterface
      */
     public function getRoles()
     {
-        $stringRoles=[];
-        foreach ($this->roles as $role){
+        $stringRoles = [];
+        foreach ($this->roles as $role) {
             /** @var Role $role */
             $stringRoles[] = $role->getRole();
         }
@@ -366,7 +373,8 @@ class User implements UserInterface
      *
      * @return User
      */
-    public function addRole(Role $role){
+    public function addRole(Role $role)
+    {
         $this->roles[] = $role;
         return $this;
     }
@@ -402,5 +410,40 @@ class User implements UserInterface
     public function eraseCredentials()
     {
     }
+
+    /**
+     * @return Tyre[]|ArrayCollection
+     */
+    public function getTyres()
+    {
+        return $this->tyres;
+    }
+
+    /**
+     * @param Tyre $tyre
+     * @return User
+     */
+    public function addTyre(Tyre $tyre)
+    {
+        $this->tyres[] = $tyre;
+        return $this;
+    }
+
+    /**
+     * @param Tyre $tyre
+     * @return bool
+     */
+    public function isSeller(Tyre $tyre){
+        //id of the current logged user
+        return $tyre->getSeller() === $this->getId();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin(){
+        return in_array('ROLE_ADMIN',$this->getRoles());
+    }
+
 }
 
