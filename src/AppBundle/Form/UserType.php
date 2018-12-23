@@ -3,6 +3,7 @@
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
@@ -37,6 +38,9 @@ class UserType extends AbstractType
                 ['attr'=>['placeholder'=>'Phone']])
             ->add('money', NumberType::class,
                 ['attr'=>['placeholder'=>'Initial Money']])
+            ->add('avatar', ChoiceType::class,
+                ['choices'=>['male'=>'user_one', 'female'=>'user_two'],
+                    'placeholder' => 'Choose a avatar'])
             ->add('register',SubmitType::class);
     }
 

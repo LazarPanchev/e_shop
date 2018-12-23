@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Tyre;
 use AppBundle\Entity\User;
 use AppBundle\Form\TyreType;
+use AppBundle\Service\Comment\CommentServiceInterface;
 use AppBundle\Service\Tyre\TyreServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -41,27 +42,42 @@ class TyreController extends Controller
             ->tyreService
             ->findAll();
 
-        $paginator = $this->get('knp_paginator');
-        $pagination = $paginator->paginate(
-            $tyres, /* query NOT result */
-            $request->query->getInt('page', 1)/*page number*/,
-            self::PAGE_LIMIT/*limit per page*/
-        );
-        return $this->render("tyre/all.html.twig",
-            ['pagination' => $pagination]);
+        return $this->handlePaginationProcess($tyres, $request);
     }
+
+    /**
+     * @Route("/myTyres", name="tyres_view_mine")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function myTyresAction(Request $request)
+    {
+        $currentUserId = $this
+            ->getUser()
+            ->getId();
+        $tyres = $this->tyreService->findById($currentUserId);
+        return $this->handlePaginationProcess($tyres, $request);
+    }
+
 
     /**
      * @Route("/view/{id}", name="tyres_view_one")
      * @param int $id
+     * @param CommentServiceInterface $commentService
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function viewOneAction(int $id)
+    public function viewOneAction(int $id, CommentServiceInterface $commentService)
     {
+        /** @var Tyre $tyre */
         $tyre = $this->findTyre($id);
+        $comments = $commentService->findComments($tyre->getId());
 
         return $this->render("tyre/one.html.twig",
-            ['tyre' => $tyre]);
+            [
+                'tyre' => $tyre,
+                'comments' => $comments
+            ]);
     }
 
     /**
@@ -114,14 +130,14 @@ class TyreController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-                $fileName = $this->handlePictureProcess($form);
-                if (null === $fileName) {
-                    return $this->render('tyre/edit.html.twig',
-                        ['tyre' => $tyre, 'form' => $form->createView()]);
-                }
-                $this->tyreService->create($tyre, $fileName);
-                $this->addFlash('success', "Tyre edited successfully.");
-                return $this->redirectToRoute('tyres_view_all');
+            $fileName = $this->handlePictureProcess($form);
+            if (null === $fileName) {
+                return $this->render('tyre/edit.html.twig',
+                    ['tyre' => $tyre, 'form' => $form->createView()]);
+            }
+            $this->tyreService->create($tyre, $fileName);
+            $this->addFlash('success', "Tyre edited successfully.");
+            return $this->redirectToRoute('tyres_view_all');
         }
         return $this->render('tyre/edit.html.twig',
             ['form' => $form->createView(), 'tyre' => $tyre]);
@@ -138,14 +154,14 @@ class TyreController extends Controller
     public function deleteAction(int $id, Request $request)
     {
         /** @var Tyre $tyre */
-        $tyre=$this->findTyre($id);
+        $tyre = $this->findTyre($id);
         $this->checkForCurrentUser($tyre);
 
         $form = $this->createForm(TyreType::class, $tyre);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-           $this->tyreService->delete($tyre);
+            $this->tyreService->delete($tyre);
             return $this->redirectToRoute('tyres_view_all');
         }
 
@@ -154,14 +170,6 @@ class TyreController extends Controller
 
     }
 
-    /**
-     *
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
-     */
-    public function myTyresAction()
-    {
-
-    }
 
     private function handlePictureProcess(Form $form)
     {
@@ -183,9 +191,10 @@ class TyreController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    private function findTyre($id){
+    private function findTyre($id)
+    {
         $tyre = $this->tyreService->findOne($id);
-        if (null ===$tyre) {
+        if (null === $tyre) {
             return $this->redirectToRoute('homepage');
         }
 
@@ -196,7 +205,8 @@ class TyreController extends Controller
      * @param $tyre
      * @return bool|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    private function checkForCurrentUser($tyre){
+    private function checkForCurrentUser($tyre)
+    {
         /** @var User $currentUser */
         $currentUser = $this->getUser();
         if (!$currentUser->isSeller($tyre) && !$currentUser->isAdmin()) {
@@ -204,4 +214,18 @@ class TyreController extends Controller
         }
         return true;
     }
+
+    private function handlePaginationProcess($tyres, $request)
+    {
+        $paginator = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $tyres, /* query NOT result */
+            $request->query->getInt('page', 1)/*page number*/,
+            self::PAGE_LIMIT/*limit per page*/
+        );
+        return $this->render("tyre/all.html.twig",
+            ['pagination' => $pagination]);
+
+    }
+
 }

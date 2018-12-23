@@ -6,6 +6,8 @@ use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
 use AppBundle\Service\User\UserServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -47,6 +49,7 @@ class UserController extends Controller
                 }
                 $encodePassword = $this->get('security.password_encoder')
                     ->encodePassword($user, $user->getPassword());
+
                 $this->userService->register($user, $encodePassword);
                 $this->addFlash("success", "User successfully created.");
 
@@ -77,4 +80,6 @@ class UserController extends Controller
         return $this->render('user/profile.html.twig',
             ['user'=>$currentUser]);
     }
+
+
 }

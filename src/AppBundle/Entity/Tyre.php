@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -125,9 +126,16 @@ class Tyre
      */
     private $viewCount;
 
+    /**
+     * @var ArrayCollection|Comment[]
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Comment", mappedBy="tyre", cascade={"remove"})
+     */
+    private $comments;
+
     public function __construct()
     {
         $this->createDate=new \DateTime('now');
+        $this->comments=new  ArrayCollection();
     }
 
 
@@ -390,6 +398,24 @@ class Tyre
     public function increaseCount(){
         $this->viewCount++;
     }
+
+    /**
+     * @return Comment[]|ArrayCollection
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param Comment[]|ArrayCollection $comments
+     */
+    public function setComments($comments)
+    {
+        $this->comments = $comments;
+    }
+
+
 
 
 

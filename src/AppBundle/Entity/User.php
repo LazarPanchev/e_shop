@@ -132,12 +132,25 @@ class User implements UserInterface
      */
     private $tyres;
 
+    /**
+     * @var ArrayCollection|Comment[]
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Comment", mappedBy="author", cascade={"remove"})
+     */
+    private $comments;
+
+    /**
+     * @var string
+     * @ORM\Column(name="avatar", type="string", nullable=true)
+     */
+    private $avatar;
+
     public function __construct()
     {
         $this->dateCreated = new \DateTime('now');
         $this->isBanned = false;
         $this->roles = new ArrayCollection();
         $this->tyres= new ArrayCollection();
+        $this->comments=new  ArrayCollection();
     }
 
 
@@ -435,7 +448,7 @@ class User implements UserInterface
      */
     public function isSeller(Tyre $tyre){
         //id of the current logged user
-        return $tyre->getSeller() === $this->getId();
+        return $tyre->getSeller()->getId() === $this->getId();
     }
 
     /**
@@ -444,6 +457,43 @@ class User implements UserInterface
     public function isAdmin(){
         return in_array('ROLE_ADMIN',$this->getRoles());
     }
+
+    /**
+     * @return Comment[]|ArrayCollection
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * @param Comment|null $comment
+     * @return User
+     */
+    public function addComment(Comment $comment =null)
+    {
+        $this->comments[] = $comment;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * @param string $avatar
+     */
+    public function setAvatar(string $avatar)
+    {
+        $this->avatar = $avatar;
+    }
+
+
+
 
 }
 

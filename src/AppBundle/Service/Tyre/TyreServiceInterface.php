@@ -18,6 +18,8 @@ interface TyreServiceInterface
 
     public function findOne(int $id);
 
+    public function findById(int $id);
+
     public function create(Tyre $tyre, string $fileName);
 
     public function delete(Tyre $tyre);

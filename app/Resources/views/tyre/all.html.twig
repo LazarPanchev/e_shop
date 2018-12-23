@@ -27,7 +27,9 @@
                     <p class="list-group-item-text">Category: {{ tyre.category.name }}s</p>
                     <p class="list-group-item-text">Added On: {{ tyre.createDate|date('d-m-y H:i:s') }}s</p>
                 </a>
-                <button type="button" class="btn btn-primary btn-lg btn-block"> Buy Now</button>
+                {% if not (app.user.isSeller(tyre)) %}
+                    <button type="button" class="btn btn-primary btn-lg btn-block"> Buy Now</button>
+                {% endif %}
                 <hr>
             {% endfor %}
         </div>

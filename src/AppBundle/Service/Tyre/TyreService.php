@@ -69,4 +69,9 @@ class TyreService implements TyreServiceInterface
     public function delete(Tyre $tyre){
        $this->tyreRepository->remove($tyre);
     }
+
+    public function findById(int $id)
+    {
+        return $this->tyreRepository->findBy(['seller' => $id]);
+    }
 }

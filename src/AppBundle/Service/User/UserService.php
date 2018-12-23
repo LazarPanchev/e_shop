@@ -53,6 +53,13 @@ class UserService implements UserServiceInterface
         $this->checkIsAdmin($user);
 
         $user->setPassword($encodePassword);
+        if(null !== $user->getAvatar()){
+            $avatar=$user->getAvatar() . '.jpg';
+            $user->setAvatar($avatar);
+        }else{
+            $user->setAvatar('no_avatar.jpg');
+        }
+
         if (null === $user->getMoney()) {
             $user->setMoney(self::INITIAL_MONEY);
         }
