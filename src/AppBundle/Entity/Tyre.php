@@ -42,8 +42,8 @@ class Tyre
      * @var int
      * @Assert\NotBlank(message="Choose tyre width")
      * @Assert\Range(
-     *      min = 30,
-     *      max = 355,
+     *      min = 115,
+     *      max = 325,
      *      minMessage = "Tyre width must be at least {{ limit }}cm width",
      *      maxMessage = "Tyre width cannot be more than {{ limit }}cm width"
      * )
@@ -55,7 +55,7 @@ class Tyre
      * @var int
      * @Assert\NotBlank(message="Choose tyre height")
      * @Assert\Range(
-     *      min = 9,
+     *      min = 30,
      *      max = 80,
      *      minMessage = "Tyre height must be at least {{ limit }}cm height",
      *      maxMessage = "Tyre height cannot be more than {{ limit }}cm height"
@@ -78,9 +78,32 @@ class Tyre
     private $diameter;
 
     /**
+     * @var float
+     * @Assert\NotBlank(message="Choose price for 1 tyre")
+     * @Assert\Range(
+     *      min = 1,
+     *      minMessage = "Tyre price can not be less than 1 lv."
+     * )
+     * @ORM\Column(name="price", type="decimal" , precision=10, scale=2)
+     */
+    private $price;
+
+    /**
+     * @var int
+     * @Assert\NotBlank(message="Choose price for 1 tyre")
+     * @Assert\Range(
+     *      min = 1,
+     *      minMessage = "Tyres quantity can not be less than 1 lv."
+     * )
+     * @ORM\Column(name="quantity", type="integer")
+     */
+    private $quantity;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="speedIndex", type="string", length=255, nullable=true)
+     * @Assert\Choice(choices={"N", "P", "Q", "R", "S", "T", "U", "H", "V", "Z", "W", "Y"}, message="Choose a valid speed Index between(N,P,Q,R,S,T,U,H,V,Z,W or Y).")
      */
     private $speedIndex;
 
@@ -88,6 +111,12 @@ class Tyre
      * @var string
      *
      * @ORM\Column(name="loadIndex", type="string", length=255, nullable=true)
+     * @Assert\Range(
+     *      min = 65,
+     *      max = 100,
+     *      minMessage = "Load Index must be at least {{ limit }}.",
+     *      maxMessage = "Load Index cannot be more than {{ limit }}."
+     * )
      */
     private $loadIndex;
 
@@ -97,6 +126,7 @@ class Tyre
      * @ORM\Column(name="createDate", type="datetime")
      */
     private $createDate;
+
 
     /**
      * @var User
@@ -413,6 +443,38 @@ class Tyre
     public function setComments($comments)
     {
         $this->comments = $comments;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * @param float $price
+     */
+    public function setPrice(float $price)
+    {
+        $this->price = $price;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getQuantity()
+    {
+        return $this->quantity;
+    }
+
+    /**
+     * @param int $quantity
+     */
+    public function setQuantity(int $quantity)
+    {
+        $this->quantity = $quantity;
     }
 
 

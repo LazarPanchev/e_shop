@@ -5,15 +5,19 @@
     <div class="list-group">
         <div class="list-group-item">
             <!--Heading with class .list-group-item-heading-->
-            <span>
+            <div>
                 {# @var tyre \AppBundle\Entity\Tyre #}
                 <h3 class="text-warning">{{ tyre.make }} {{ tyre.model }}</h3>
-                <h4 class="list-group-item-heading">{{ tyre.width }}/{{ tyre.height }}
+                <h4 class="list-group-item-heading text-success">{{ tyre.width }}/{{ tyre.height }}
                     R{{ tyre.diameter }} {{ tyre.speedIndex }} {{ tyre.loadIndex }}</h4>
                     <img class="media-object img-rounded img-responsive" width="100px" height="200px%"
                          src="{{ asset('uploads/images/tyres/' ~ tyre.image) }}"
                          alt="placehold.it/350x250">
+                <span class="price text-danger" style="margin-left: 600px;">
+                    Price: {{ tyre.price }} lv.
+                            Quantity: {{ tyre.quantity }} left.
                 </span>
+            </div>
             <!--Paragraph with class .list-group-item-text -->
             <p class="list-group-item-text">Viewed: {{ tyre.viewCount }}</p>
             <p class="list-group-item-text">Seller: {{ tyre.seller.fullName }}</p>
@@ -23,9 +27,7 @@
             <a href="{{ path('tyres_edit', {'id': tyre.id}) }}">
                 <button type="button" class="btn btn-primary btn-lg btn-block"> Edit</button>
             </a>
-            <a href="{{ path('tyres_delete', {'id': tyre.id}) }}">
-                <button type="button" class="btn btn-primary btn-lg btn-block"> Delete</button>
-            </a>
+                <button type="button" class="btn btn-primary btn-lg btn-block"  data-toggle="modal" data-target="#modalDelete"  role="button"> Delete</button>
         {% else %}
             <button type="button" class="btn btn-primary btn-lg btn-block"> Buy Now</button>
         {% endif %}
@@ -91,6 +93,37 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h4 class="modal-title w-100 font-weight-bold">Are you sure you want to Delete this item?</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body mx-3">
+                    <form method="post" action="{{ path('tyres_delete', {'id': tyre.id}) }}" class="md-form mb-5" name="delete">
+                        <i class="fa fa-envelope prefix grey-text"></i>
+                        <label data-error="wrong" data-success="right" for="comment_content">
+                            {{ tyre.make }} {{ tyre.model }} {{ tyre.width }}/{{ tyre.height }} R{{ tyre.diameter }}
+                            <div>
+                                Added on: {{ tyre.createDate|date('F jS \\a\\t g:ia', 'Europe/Sofia') }}
+                            </div>
+                        </label>
+
+                        <div class="modal-footer d-flex justify-content-center">
+                            <button type="button" class="btn-primary close" data-dismiss="modal" aria-label="Close">Cancel</button>
+                            <input type="submit" class="btn btn-danger" value="Delete"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <script>
         $('#btnComment').on('click', function (event) {

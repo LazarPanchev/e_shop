@@ -69,6 +69,31 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="col-sm-4 control-label" for="tyre_price"
+                               data-toggle="tooltip" data-placement="right" title="Please enter price for the current tyre!"
+                               data-original-title="Tooltip on right">Tyre price</label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="tyre_price" placeholder="Tyre Price"
+                                   type="number" name="tyre[price]" value="{{ tyre.price }}"/>
+                            <div class="text-danger" style="color: red">
+                                {{ form_errors(form.price) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="tyre_quantity"
+                               data-toggle="tooltip" data-placement="right" title="Please enter quantity of tyres you want to sell!"
+                               data-original-title="Tooltip on right">Tyres quantity</label>
+                        <div class="col-sm-4">
+                            <input class="form-control" id="tyre_quantity" placeholder="Tyres Quantity"
+                                   type="number" name="tyre[quantity]" value="{{ tyre.quantity }}"/>
+                            <div class="text-danger" style="color: red">
+                                {{ form_errors(form.quantity) }}
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="col-sm-4 control-label" for="tyre_speedIndex"
                                data-toggle="tooltip" data-placement="right" title="The Speed index is represented by a letter and associated with the tyre's maximum speed capability when operating at its maximum load carrying capacity." data-original-title="Tooltip on right">Speed Index</label>
                         <div class="col-sm-4">

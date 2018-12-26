@@ -1,40 +1,128 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
-   <div class="container">
-      <div class="jumbotron" >
-         <div class="container">
-            <h1 class="display-3">HOME PAGE</h1>
-            <p>Welcome to our Online shop. Here you can buy or sell products, add promotions and many more..</p>
-            {% if app.user %}
-            <h2>Welcome {{ user.fullName }}!</h2>
-               <div class="nav-item">
-                  <p><a class="btn btn-primary btn-lg" href="{{ path('users_profile', {'id': user.id }) }}" role="button">My profile &raquo;</a></p>
-               </div>
-               <div class="nav-item">
-                  <p><a class="btn btn-primary btn-lg" href="{{ path('tyres_create') }}" role="button">Sell Tyres &raquo;</a></p>
-               </div>
-               <div class="nav-item">
-                  <p><a class="btn btn-primary btn-lg" href="#" role="button">Add Promotion &raquo;</a></p>
-               </div>
-               <div class="nav-item">
-                  <p><a class="btn btn-primary btn-lg" href="{{ path('tyres_view_all') }}" role="button">View all tyres &raquo;</a></p>
-               </div>
-            {% else %}
-            <ul class="nav flex-column">
-               <li class="nav-item">
-                  <p><a class="btn btn-primary btn-lg" href="{{ path('users_register') }}" role="button">Register &raquo;</a></p>
-               </li>
-               <li class="nav-item">
-                  <p><a class="btn btn-primary btn-lg" href="{{ path('security_login') }}" role="button">Login &raquo;</a></p>
-               </li>
+    {#<html lang="en">#}
+    {#<body>#}
 
-            </ul>
-            {% endif %}
-         </div>
-      </div>
-       {% block body %}{% endblock %}
-   </div>
-{% endblock %}
+    {#<header>#}
+        {#<!-- Full Page Intro -->#}
+        {#<div class="view" style="background-image: url('https://www.nationalgrapheneassociation.com/wp-content/uploads/2018/02/compressedtires.jpg');#}
+         {#background-repeat: no-repeat; background-size: cover; background-position: center center;">#}
+            {#<!-- Mask & flexbox options-->#}
+            {#<div class="mask rgba-gradient align-items-center">#}
+                {#<!-- Content -->#}
+                {#<div class="container">#}
+                    {#<!--Grid row-->#}
+                    {#<div class="row mt-5">#}
+                        {#<!--Grid column-->#}
+                        {#<div class="col-md-6 mb-5 mt-md-0 mt-5 white-text text-center text-md-left">#}
+                            {#<h1 class="h1-responsive font-weight-bold wow fadeInLeft" data-wow-delay="0.3s">Sign up right now! </h1>#}
+                            {#<hr class="hr-light wow fadeInLeft" data-wow-delay="0.3s">#}
+                            {#<h6 class="mb-3 wow fadeInLeft" data-wow-delay="0.3s">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem repellendus quasi fuga#}
+                                {#nesciunt dolorum nulla magnam veniam sapiente, fugiat! Commodi sequi non animi ea#}
+                                {#dolor molestiae, quisquam iste, maiores. Nulla.</h6>#}
+                            {#<a class="btn btn-outline-white wow fadeInLeft" data-wow-delay="0.3s">Learn more</a>#}
+                        {#</div>#}
+                        {#<!--Grid column-->#}
+                        {#<!--Grid column-->#}
+                        {#<div class="col-md-6 col-xl-5 mb-4">#}
+
+                            {#<p>Welcome to our Online shop. Here you can buy or sell products, add promotions and many more..</p>#}
+                            {#{% if app.user %}#}
+                            {#<h2>Welcome {{ user.fullName }}!</h2>#}
+                            {#<div class="nav-item">#}
+                            {#<p><a class="btn btn-primary btn-lg" href="{{ path('users_profile', {'id': user.id }) }}" role="button">My profile &raquo;</a></p>#}
+                            {#</div>#}
+                            {#<div class="nav-item">#}
+                            {#<p><a class="btn btn-primary btn-lg" href="{{ path('tyres_create') }}" role="button">Sell Tyres &raquo;</a></p>#}
+                            {#</div>#}
+                            {#<div class="nav-item">#}
+                            {#<p><a class="btn btn-primary btn-lg" href="#" role="button">Add Promotion &raquo;</a></p>#}
+                            {#</div>#}
+                            {#<div class="nav-item">#}
+                            {#<p><a class="btn btn-primary btn-lg" href="{{ path('tyres_view_all') }}" role="button">View all tyres &raquo;</a></p>#}
+                            {#</div>#}
+                                {#<div class="nav-item">#}
+                                    {#<p><a class="btn btn-primary btn-lg" href="{{ path('tyres_view_all') }}" role="button">SearchType Tyres&raquo;</a></p>#}
+                                {#</div>#}
+                            {#{% else %}#}
+                            {#<ul class="nav flex-column">#}
+                            {#<li class="nav-item">#}
+                            {#<p><a class="btn btn-primary btn-lg" href="{{ path('users_register') }}" role="button">Register &raquo;</a></p>#}
+                            {#</li>#}
+                            {#<li class="nav-item">#}
+                            {#<p><a class="btn btn-primary btn-lg" href="{{ path('security_login') }}" role="button">Login &raquo;</a></p>#}
+                            {#</li>#}
+
+                            {#</ul>#}
+                            {#{% endif %}#}
+                            {#</div>#}
+                            {#</div>#}
+                        {#</div>#}
+                        {#<!--Grid column-->#}
+                    {#</div>#}
+                    {#<!--Grid row-->#}
+                {#</div>#}
+                {#<!-- Content -->#}
+            {#</div>#}
+            {#<!-- Mask & flexbox options-->#}
+        {#</div>#}
+        {#<!-- Full Page Intro -->#}
+    {#</header>#}
+    {#<!-- Main navigation -->#}
+    {#<!--Main Layout-->#}
+    {#<main>#}
+        {#<div class="container">#}
+            {#<!--Grid row-->#}
+            {#<div class="row py-5">#}
+                {#<!--Grid column-->#}
+                {#<div class="col-md-12 text-center">#}
+                    {#<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>#}
+                {#</div>#}
+                {#<!--Grid column-->#}
+            {#</div>#}
+            {#<!--Grid row-->#}
+        {#</div>#}
+    {#</main>#}
+    {#<!--Main Layout-->#}
+
+    </body>
+    </html>
+    <div class="container">
+    <div class="jumbotron" >
+    <div class="container">
+    <h1 class="display-3">HOME PAGE</h1>
+    <p>Welcome to our Online shop. Here you can buy or sell products, add promotions and many more..</p>
+    {% if app.user %}
+    <h2>Welcome {{ user.fullName }}!</h2>
+    <div class="nav-item">
+    <p><a class="btn btn-primary btn-lg" href="{{ path('users_profile', {'id': user.id }) }}" role="button">My profile &raquo;</a></p>
+        <p><a class="btn btn-primary btn-lg" href="{{ path('tyres_search') }}" role="button">Search&raquo;</a></p>
+    </div>
+    <div class="nav-item">
+    <p><a class="btn btn-primary btn-lg" href="{{ path('tyres_create') }}" role="button">Sell Tyres &raquo;</a></p>
+    </div>
+    <div class="nav-item">
+    <p><a class="btn btn-primary btn-lg" href="#" role="button">Add Promotion &raquo;</a></p>
+    </div>
+    <div class="nav-item">
+    <p><a class="btn btn-primary btn-lg" href="{{ path('tyres_view_all') }}" role="button">View all tyres &raquo;</a></p>
+    </div>
+    {% else %}
+    <ul class="nav flex-column">
+    <li class="nav-item">
+    <p><a class="btn btn-primary btn-lg" href="{{ path('users_register') }}" role="button">Register &raquo;</a></p>
+    </li>
+    <li class="nav-item">
+    <p><a class="btn btn-primary btn-lg" href="{{ path('security_login') }}" role="button">Login &raquo;</a></p>
+    </li>
+
+    </ul>
+    {% endif %}
+    </div>
+    </div>
+    {% block body %}{% endblock %}
+    </div>
+    {% endblock %}
 
 

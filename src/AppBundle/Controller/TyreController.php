@@ -89,6 +89,7 @@ class TyreController extends Controller
     public function createAction(Request $request)
     {
         $tyre = new Tyre();
+        /** @var Form $form */
         $form = $this->createForm(TyreType::class, $tyre);
         $form->handleRequest($request);
 
@@ -123,9 +124,11 @@ class TyreController extends Controller
      */
     public function editAction(int $id, Request $request)
     {
+        /** @var Tyre $tyre */
         $tyre = $this->findTyre($id);
         $this->checkForCurrentUser($tyre);
 
+        /** @var Form $form */
         $form = $this->createForm(TyreType::class, $tyre);
         $form->handleRequest($request);
 
@@ -159,14 +162,19 @@ class TyreController extends Controller
 
         $form = $this->createForm(TyreType::class, $tyre);
         $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->tyreService->delete($tyre);
-            return $this->redirectToRoute('tyres_view_all');
+        /** @var User $currentUser */
+        $currentUser=$this->getUser();
+        if( !$currentUser->isAdmin() && !$currentUser->isSeller($tyre) ){
+            return $this->redirectToRoute('homepage');
         }
 
-        return $this->render('tyre/delete.html.twig',
-            ['tyre' => $tyre, 'form' => $form->createView()]);
+//        if ($form->isSubmitted() && $form->isValid()) {
+            $this->tyreService->delete($tyre);
+            return $this->redirectToRoute('tyres_view_all');
+//        }
+//
+//        return $this->render('tyre/delete.html.twig',
+//            ['tyre' => $tyre, 'form' => $form->createView()]);
 
     }
 

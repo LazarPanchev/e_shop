@@ -28,11 +28,19 @@ class TyreType extends AbstractType
             ])
             ->add('make', TextType::class)
             ->add('model', TextareaType::class)
-            ->add('width', NumberType::class)
-            ->add('height', NumberType::class)
-            ->add('diameter', NumberType::class)
+            ->add('width', NumberType::class,
+                ['invalid_message'=>'You must enter a valid number!'])
+            ->add('height', NumberType::class,
+                ['invalid_message'=>'You must enter a valid number!'])
+            ->add('diameter', NumberType::class,
+                ['invalid_message'=>'You must enter a valid number!'])
+            ->add('price',NumberType::class,
+                ['invalid_message'=>'You must enter a valid number!'])
+            ->add('quantity', NumberType::class,
+                ['invalid_message'=>'You must enter a valid number!'])
             ->add('speedIndex', TextType::class)
-            ->add('loadIndex', NumberType::class)
+            ->add('loadIndex', NumberType::class,
+                ['invalid_message'=>'You must enter a valid number!'])
             ->add('image', FileType::class,
                 ['data' => null])
             ->add('add', SubmitType::class);
