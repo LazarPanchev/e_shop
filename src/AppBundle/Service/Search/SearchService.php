@@ -24,14 +24,44 @@ class SearchService implements SearchServiceInterface
         $this->searchRepository=$searchRepository;
     }
 
-    public function searchBySize(int $searchedWidth,int $searchedHeight,int $searchedDiameter)
+    public function searchBySize($request)
     {
-        return $this->searchRepository->findBySize($searchedWidth,$searchedHeight,$searchedDiameter);
+        $width = $request->query->get('width');
+        $height = $request->query->get('height');
+        $diameter = $request->query->get('diameter');
+        $sortingMethod=['diameter'=>'ASC','width'=>'ASC'];
+        if($width===''){
+            if($height===''){
+                if($diameter===''){
+                    return $this->searchRepository->findAll();
+                }
+                return $this->searchRepository->findBy(['width'=>$width],$sortingMethod);
+            }
+            if($diameter===''){
+                return $this->searchRepository->findBy(['height'=>$height],$sortingMethod);
+            }
+            return $this->searchRepository->findBy(['height'=>$height,'diameter'=>$diameter],$sortingMethod);
+        }
+
+        if($height===''){
+            if($diameter===''){
+                return $this->searchRepository->findBy(['width'=>$width],$sortingMethod);
+            }
+            return $this->searchRepository->findBy(['width'=>$width,'diameter'=>$diameter],$sortingMethod);
+        }
+
+        if($diameter===''){
+            return $this->searchRepository->findBy(['width'=>$width,'height'=>$height],$sortingMethod);
+        }
+
+        return $this->searchRepository->findBy(['width'=>$width,'height'=>$height,'diameter'=>$diameter],$sortingMethod);
     }
 
-    public function searchByBrand(Form $form)
+    public function searchByBrand($request)
     {
-        $searchedWord= $form->getData()['Brand'];
-        return $this->searchRepository->findByBrand($searchedWord);
+        $searchedWord=$request->query->get('searchedWord');
+        return $this
+            ->searchRepository
+            ->findByBrand($searchedWord);
     }
 }

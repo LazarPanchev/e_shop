@@ -13,7 +13,6 @@ use AppBundle\Entity\Role;
 use AppBundle\Entity\User;
 use AppBundle\Repository\RoleRepository;
 use AppBundle\Repository\UserRepository;
-use Doctrine\ORM\EntityManager;
 
 class UserService implements UserServiceInterface
 {
@@ -95,5 +94,10 @@ class UserService implements UserServiceInterface
             $roleAdmin=$this->roleRepository->findOneBy(['name'=>'ROLE_ADMIN']);
             $user->addRole($roleAdmin);
         }
+    }
+
+    public function findById($id)
+    {
+        return $this->userRepository->find($id);
     }
 }

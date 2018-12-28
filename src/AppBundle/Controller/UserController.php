@@ -5,9 +5,8 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
 use AppBundle\Service\User\UserServiceInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\Form;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -67,13 +66,18 @@ class UserController extends Controller
     }
 
     /**
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @Route("/profile/{id}", name="users_profile")
-     * @param int $id
+     * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function profileAction(int $id){
-        $currentUser=$this->getUser();
-        if ($currentUser === null) {
+    public function profileAction($id){
+        /** @var User  $currentUser */
+        $currentUser=$this
+            ->userService
+            ->findById($id);
+        if ($currentUser === null ||
+            $currentUser->getId() !== $this->getUser()->getId() ) {
             return $this->redirectToRoute('homepage');
         }
 

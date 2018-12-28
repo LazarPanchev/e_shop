@@ -9,20 +9,19 @@
         {#{{ form(form) }}#}
     {#</div>#}
 {#</div>#}
+<img style="margin-left: 250px; margin-bottom: -40px" src="{{ asset('uploads/images/tyre_size/tyre_size2.jpg') }}" alt="Card image">
+<div class="card-body">
     <div class="card">
         <div class="card-header">
-            <h3 class="card-header">Search By Size</h3>
+            <h3 class="card-header">Search Tyres By Size</h3>
+
         </div>
         <div class="card-body">
-            <form method="post" class="form-horizontal" action="{{ path('tyres_search_size') }}" name="search"
-            novalidate="novalidate">
-            <input class="form-control" id="user_address" placeholder="Brand"
-                   type="text" name="form[Size][width]" />
-              <input class="form-control" id="user_address" placeholder="Brand"
-                     type="text" name="form[Size][height]" />
-              <input class="form-control" id="user_address" placeholder="Brand"
-                     type="text" name="form[Size][diameter]" />
-                <button type="submit" class="btn btn-primary">Search</button>
+            <form method="post" class="form-horizontal"
+                  {#action="{{ path('tyres_search',{'width': '200','height':'100', 'diameter':'20'}) }}"#}
+                    action="{{ path('tyres_search') }}"
+                  name="search" novalidate="novalidate">
+                {{ form(form) }}
             </form>
 
         </div>

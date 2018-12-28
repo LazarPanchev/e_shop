@@ -13,7 +13,9 @@ use Symfony\Component\Form\Form;
 
 interface SearchServiceInterface
 {
-    public function searchBySize(int $searchedWidth,int $searchedHeight,int $searchedDiameter);
+    public function searchBySize($request);
 
-    public function searchByBrand(Form $form);
+    public function searchByBrand($request);
+
+
 }

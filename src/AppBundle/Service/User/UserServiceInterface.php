@@ -22,4 +22,6 @@ interface UserServiceInterface
     public function findByEmail(string $email);
 
     public function findAll();
+
+    public function findById($id);
 }
