@@ -116,7 +116,7 @@ class User implements UserInterface
     private $isBanned;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection|Role[]
      *
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Role", inversedBy="users")
      * @ORM\JoinTable(name="users_roles",
@@ -144,13 +144,26 @@ class User implements UserInterface
      */
     private $avatar;
 
+    /**
+     * @var ArrayCollection|Purchase[]
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Purchase",mappedBy="userId")
+     */
+    private $purchases;
+
+    /**
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Cart", mappedBy="userId")
+     * @ORM\JoinColumn(name="cart_id", referencedColumnName="id")
+     */
+    private $cartId;
+
     public function __construct()
     {
         $this->dateCreated = new \DateTime('now');
         $this->isBanned = false;
         $this->roles = new ArrayCollection();
-        $this->tyres= new ArrayCollection();
-        $this->comments=new  ArrayCollection();
+        $this->tyres = new ArrayCollection();
+        $this->comments = new  ArrayCollection();
+        $this->purchases = new ArrayCollection();
     }
 
 
@@ -446,7 +459,8 @@ class User implements UserInterface
      * @param Tyre $tyre
      * @return bool
      */
-    public function isSeller(Tyre $tyre){
+    public function isSeller(Tyre $tyre)
+    {
         //id of the current logged user
         return $tyre->getSeller()->getId() === $this->getId();
     }
@@ -454,8 +468,9 @@ class User implements UserInterface
     /**
      * @return bool
      */
-    public function isAdmin(){
-        return in_array('ROLE_ADMIN',$this->getRoles());
+    public function isAdmin()
+    {
+        return in_array('ROLE_ADMIN', $this->getRoles());
     }
 
     /**
@@ -470,7 +485,7 @@ class User implements UserInterface
      * @param Comment|null $comment
      * @return User
      */
-    public function addComment(Comment $comment =null)
+    public function addComment(Comment $comment = null)
     {
         $this->comments[] = $comment;
         return $this;
@@ -492,8 +507,42 @@ class User implements UserInterface
         $this->avatar = $avatar;
     }
 
+    /**
+     * @return int
+     */
+    public function getCartId()
+    {
+        return $this->cartId;
+    }
 
+    /**
+     * @param int $cartId
+     */
+    public function setCartId($cartId)
+    {
+        $this->cartId = $cartId;
+    }
 
+    /**
+     * @return Purchase[]|ArrayCollection
+     */
+    public function getPurchases()
+    {
+        return $this->purchases;
+    }
 
+    /**
+     * @param Purchase $purchase
+     * @return User
+     */
+    public function addPurchase(Purchase $purchase)
+    {
+        $this->purchases[] = $purchase;
+        return $this;
+    }
+
+//    public function __sleep(){
+//        return array($this->getId(), $this->getUsername(), $this->getEmail());
+//    }
 }
 

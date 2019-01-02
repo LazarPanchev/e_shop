@@ -6,6 +6,7 @@
             <form method="post" class="form-horizontal" action="{{ path('users_register') }}" name="register"
                   novalidate="novalidate">
                 <fieldset>
+                    <div class="container">
                     <hr>
                     <h2 class="intro-text text-center"><strong>Register</strong></h2>
                     <hr>
@@ -96,6 +97,7 @@
                             <a class="btn btn-primary" href="{{ path('homepage') }}">Cancel</a>
                             <button type="submit" class="btn btn-primary">Register</button>
                         </div>
+                    </div>
                     </div>
                     {{ form_row(form._token) }}
                 </fieldset>

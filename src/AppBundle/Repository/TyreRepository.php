@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\AppBundle;
 use AppBundle\Entity\Tyre;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -41,5 +42,17 @@ class TyreRepository extends EntityRepository
     public function remove(Tyre $tyre){
         $this->_em->remove($tyre);
         $this->_em->flush();
+    }
+
+    public function findTyresInCart($cartId){
+        $query=$this->createQueryBuilder('c')
+            ->select('c')
+            ->from('AppBundle:Tyre','tyre')
+            ->innerJoin('c.carts', 'carts')
+            ->where('carts.id = :cartId')
+            ->setParameter('cartId',$cartId)
+            ->orderBy('c.dateAdded', 'ASC')
+            ->getQuery();
+        return $query->getResult();
     }
 }

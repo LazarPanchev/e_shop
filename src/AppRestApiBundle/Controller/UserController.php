@@ -72,12 +72,4 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * @param Request $request
-     * @param int $id
-     */
-    public function editAction(Request $request, int $id)
-    {
-
-    }
 }

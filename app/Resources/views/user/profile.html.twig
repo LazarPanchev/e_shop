@@ -3,42 +3,45 @@
 {% block main %}
     <div class="alert alert-dismissible alert-success text-center" style="display: none" id="successBox"></div>
     <div class="alert alert-dismissible alert-danger text-center" style="display: none" id="errorBox"></div>
-    <div class="jumbotron">
-        <h1 class="display-3">My Profile</h1>
-        {# @var user \AppBundle\Entity\User #}
-        <p class="lead">{{ user.fullName }}</p>
-        <hr class="my-4">
-        <p class="lead" id="userMoney">{{ user.money|number_format(2) }} lv.</p>
-        <hr class="my-4">
-        <p>Here you can make a deposit.</p>
+    <div class="widget center">
+        <div class="blur"></div>
+        <div class="text center">
+            <h1 class="display-3">My Profile</h1>
+            {# @var user \AppBundle\Entity\User #}
+            <hr>
+            <p class="lead">{{ user.fullName }}</p>
+            <hr class="my-4">
+            <p class="lead" id="userMoney">{{ user.money|number_format(2) }} lv.</p>
+            <hr class="my-4">
+            <p>Here you can make a deposit.</p>
 
-        <div class="modal fade" id="modalForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header text-center">
-                        <h4 class="modal-title w-100 font-weight-bold">Make deposit</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body mx-3">
-                        <div class="md-form mb-5">
-                            <i class="fa fa-envelope prefix grey-text"></i>
-                            <label data-error="wrong" data-success="right" for="defaultForm-email">Amount</label>
-                            <input type="number" id="amount" class="form-control validate"/>
-
+            <div class="modal fade" id="modalForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header text-center">
+                            <h4 class="modal-title w-100 font-weight-bold">Make deposit</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
                         </div>
-                    </div>
-                    <div class="modal-footer d-flex justify-content-center">
-                        <button id="submit" class="btn btn-primary">Submit</button>
+                        <div class="modal-body mx-3">
+                            <div class="md-form mb-5">
+                                <i class="fa fa-envelope prefix grey-text"></i>
+                                <label data-error="wrong" data-success="right" for="amount">Amount</label>
+                                <input type="number" id="amount" class="form-control validate"/>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-center">
+                            <button id="submit" class="btn btn-primary">Submit</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="lead" id="deposit">
-            <a href="" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modalForm"
-               role="button">Deposit</a>
+            <div class="lead" id="deposit" style="text-align: center">
+                <a href="" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modalForm"
+                   role="button">Deposit</a>
+            </div>
         </div>
     </div>
     <script>
@@ -68,7 +71,7 @@
 
             successBox.text(`Well done! You just added ${sum} lv. to your account balance.`);
             successBox.show();
-            setTimeout(function() {
+            setTimeout(function () {
                 $('#successBox').fadeOut()
             }, 3000);
         }
@@ -80,11 +83,16 @@
             errorBox.text(`Error: Enter a valid number!`);
             errorBox.show();
             $('#amount').val('');
-            setTimeout(function() {
+            setTimeout(function () {
                 $('#errorBox').fadeOut()
             }, 3000);
         }
     </script>
+{% endblock %}
 
+{% block footer %}
+    <div class="footer">
+        {{ parent() }}
+    </div>
 {% endblock %}
 

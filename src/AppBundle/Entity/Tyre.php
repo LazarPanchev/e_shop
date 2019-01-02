@@ -162,10 +162,27 @@ class Tyre
      */
     private $comments;
 
+    /**
+     * @var ArrayCollection| Cart[]
+     *
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Cart", mappedBy="tyres")
+     */
+    private $carts;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_added", type="datetime")
+     */
+    private $dateAdded;
+
+
     public function __construct()
     {
         $this->createDate=new \DateTime('now');
         $this->comments=new  ArrayCollection();
+        $this->carts= new ArrayCollection();
+        $this->dateAdded= new \DateTime('now');
     }
 
 
@@ -477,9 +494,21 @@ class Tyre
         $this->quantity = $quantity;
     }
 
+    /**
+     * @return \DateTime
+     */
+    public function getDateAdded(): \DateTime
+    {
+        return $this->dateAdded;
+    }
 
-
-
+    /**
+     * @param \DateTime $date
+     */
+    public function setDateAdded(\DateTime $date)
+    {
+        $this->dateAdded = $date;
+    }
 
 
 }

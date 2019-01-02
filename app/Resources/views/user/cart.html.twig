@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <div class="alert alert-dismissible alert-danger text-center" id="error" style="display: none; position: fixed; left: 30%">
+        <button type="button" class="close" data-dismiss="alert"></button>
+        <strong>Oh snap! Chosen quantity is bigger than available quantity or not a valid number!</strong>
+    </div>
+    <h2 style="text-align: center">My Shopping Cart</h2>
+    <hr/>
+    {% if tyres is empty %}
+        <div class="text-warning" style="text-align: center"><h2>Your cart is empty</h2>
+            <a href="{{ path('tyres_view_all') }}"><h5>Go shopping!</h5></a></div>
+    {% else %}
+        <form method="post" action="#" name="purchase">
+
+            <table class="table table-primary" border="2" style="background-color: greenyellow">
+                <thead class="thead-dark">
+                <tr>
+                    <th class="text-secondary" style="text-align: center">Items:</th>
+                    <th class="text-secondary" style="text-align: center">Product</th>
+                    <th class="text-secondary" style="text-align: center">Description</th>
+                    <th class="text-secondary" style="text-align: center">Price/PC</th>
+                    <th class="text-secondary" style="text-align: center">Available Tyres</th>
+                    <th class="text-secondary" style="text-align: center">Number Tyres</th>
+                    <th class="text-secondary" style="text-align: center">End Price</th>
+                    <th class="text-secondary" style="text-align: center">Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for tyre in tyres  %}
+                    <tr>
+                        <td>{{ loop.index }}.</td>
+                        <td><img class="media-object img-rounded img-responsive" width="75px" height="150px%"
+                                 src="{{ asset('uploads/images/tyres/' ~ tyre.image) }}"
+                                 alt="placehold.it/350x250"></td>
+                        {# @var tyre \AppBundle\Entity\Tyre #}
+                        <td><span style="color: darkmagenta">{{ tyre.make }}{{ tyre.model }}</span>
+                            {{ tyre.width }}/{{ tyre.height }}
+                            R{{ tyre.diameter }} {{ tyre.loadIndex }}{{ tyre.speedIndex }}</td>
+                        <td style="text-align: right" id="pricePerTyre">{{ tyre.price }} лв.</td>
+                        <td>{{ tyre.quantity }}</td>
+                        <td><input type="number" id="quantity" placeholder="1"
+                                   onchange="checkQuantity(this)" name="cart[quantity]"></td>
+                        <td style="color: red; text-align: right" id="endPrice">{{ tyre.price }} лв.</td>
+                        <td><a class="btn btn-danger" href="{{ path('cart_delete', {'tyreId': tyre.id}) }}">Remove</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {#{{ form(form) }}#}
+            {#<button type="submit" class="btn btn-primary">Buy</button>#}
+        </form>
+        <div class="container">
+            <a href="{{ path('tyres_view_all') }}"><button class="btn-primary">Continue shopping</button></a>
+        </div>
+    {% endif %}
+    <script>
+        function checkQuantity(el) {
+            let tr = el.parentNode.parentNode;
+            let availableQuantity = parseInt($(tr).find("td:nth-child(5)").html());
+            let chosenQuantity = parseInt($(el).val());
+
+            if(!Number.isInteger(chosenQuantity)){
+                    handleError()
+            }else {
+                if(chosenQuantity>availableQuantity){
+                   handleError()
+                }else {
+                    let pricePerTyre = parseFloat($(tr).find("td:nth-child(4)").html());
+                    let endPriceBox = $(tr).find("td:nth-child(7)");
+
+                    let totalPrice = (chosenQuantity * pricePerTyre).toFixed(2);
+                    endPriceBox.text(totalPrice + ' лв.');
+                }
+            }
+        }
+        function handleError() {
+            let errorBox=$('#error');
+            errorBox.css("display","inline");
+            setTimeout(function () {
+                $('#error').fadeOut();
+            }, 4000);
+            $(el).val('1');
+        }
+    </script>
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
+

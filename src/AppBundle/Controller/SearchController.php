@@ -47,11 +47,6 @@ class SearchController extends Controller
             return $this->redirect($this
                 ->generateUrl('tyres_search_size',
                     ['width' => $width, 'height' => $height, 'diameter' => $diameter]));
-//            return $this->redirect($this
-//                ->get('router')
-//                ->generate('tyres_search',
-//                    ['width' => $width, 'height' => $height, 'diameter' => $diameter]));
-
         }
 
         return $this->render('tyre/search.html.twig',

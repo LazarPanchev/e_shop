@@ -74,4 +74,11 @@ class TyreService implements TyreServiceInterface
     {
         return $this->tyreRepository->findBy(['seller' => $id]);
     }
+
+    public function findTyresByCartId($cartId){
+        $tyres = $this
+            ->tyreRepository
+            ->findTyresInCart($cartId);
+        return $tyres;
+    }
 }

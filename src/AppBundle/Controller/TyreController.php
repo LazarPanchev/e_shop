@@ -106,7 +106,7 @@ class TyreController extends Controller
                 ->tyreService
                 ->create($tyre, $fileName);
 
-            $this->addFlash('success', "Add tyre successful.");
+            $this->addFlash('success', "Add tyre for sale successful.");
             return $this->redirectToRoute('tyres_view_all');
         }
 

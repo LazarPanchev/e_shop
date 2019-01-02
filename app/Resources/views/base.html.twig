@@ -17,10 +17,10 @@
         <script>
             setTimeout(function () {
                 $('#success').fadeOut();
-            }, 3000);
+            }, 4000);
             setTimeout(function () {
                 $('#error').fadeOut();
-            }, 3000)
+            }, 4000)
         </script>
     {% endblock %}
 </head>
@@ -51,6 +51,9 @@
                     <li class="nav-item active">
                         <a class="nav-link" href="{{ path('users_profile', {'id': app.user.id}) }}">My profile <span class="sr-only">(current)</span></a>
                     </li>
+                    <li class="nav-item active">
+                       <a class="nav-link" href="{{ path('cart_show') }}">Shopping Cart <span class="sr-only">(current)</span></a>
+                    </li>
 
                     <li class="nav-item active">
                         <a class="nav-link" href="{{ path('security_logout') }}">Logout <span
@@ -77,14 +80,14 @@
 </header>
 <main>
     {% for msg in app.session.flashBag.get('success') %}
-        <div class="alert alert-dismissible alert-success text-center" id="success">
+        <div class="alert alert-dismissible alert-success text-center" id="success" style="position: fixed; left: 30%">
             <button type="button" class="close" data-dismiss="alert"></button>
             <strong>Well done! {{ msg }}</strong>
         </div>
     {% endfor %}
 
     {% for msg in app.session.flashBag.get('error') %}
-        <div class="alert alert-dismissible alert-danger text-center" id="error">
+        <div class="alert alert-dismissible alert-danger text-center" id="error" style="position: fixed; left: 30%">
             <button type="button" class="close" data-dismiss="alert"></button>
             <strong>Oh snap! {{ msg }}</strong>
         </div>
@@ -95,6 +98,7 @@
     </div>
 </main>
 
+{% block footer %}
 <footer>
     <div class="progress">
         <div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0"
@@ -116,5 +120,7 @@
              aria-valuemax="100"></div>
     </div>
 </footer>
+{% endblock %}
 </body>
 </html>
+

@@ -1,35 +1,36 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
-    <h1 class="text-center">Tyres</h1>
+    <h1 class="text-center">Details</h1>
     <div class="list-group">
         <div class="list-group-item">
             <!--Heading with class .list-group-item-heading-->
             <div>
-                {# @var tyre \AppBundle\Entity\Tyre #}
-                <h3 class="text-warning">{{ tyre.make }} {{ tyre.model }}</h3>
-                <h4 class="list-group-item-heading text-success">{{ tyre.width }}/{{ tyre.height }}
+                <h3 class="text-warning" style="text-align: center">{{ tyre.make }} {{ tyre.model }}</h3>
+                <h4 class="list-group-item-heading text-success" style="text-align: center">{{ tyre.width }}/{{ tyre.height }}
                     R{{ tyre.diameter }} {{ tyre.speedIndex }} {{ tyre.loadIndex }}</h4>
-                    <img class="media-object img-rounded img-responsive" width="100px" height="200px%"
-                         src="{{ asset('uploads/images/tyres/' ~ tyre.image) }}"
-                         alt="placehold.it/350x250">
-                <span class="price text-danger" style="margin-left: 600px;">
-                    Price: {{ tyre.price }} lv.
-                            Quantity: {{ tyre.quantity }} left.
+                <img class="media-object img-rounded img-responsive" width="100px" height="200px%"
+                     src="{{ asset('uploads/images/tyres/' ~ tyre.image) }}"
+                     alt="placehold.it/350x250">
+                <span style="margin-left: 600px;">
+                            <span  class="text-warning">Price: </span ><span style="font-size: 30px" class="price" >{{ tyre.price }}</span>
                 </span>
+
             </div>
-            <!--Paragraph with class .list-group-item-text -->
-            <p class="list-group-item-text">Viewed: {{ tyre.viewCount }}</p>
-            <p class="list-group-item-text">Seller: {{ tyre.seller.fullName }}</p>
-            <p class="list-group-item-text">Category: {{ tyre.category.name }}s</p>
+            <span  class="text-warning" style="bottom: auto">Quantity:  </span><span class="quantity">{{ tyre.quantity  }}</span> left
+            <p class="list-group-item-text"><span class="text-warning">Viewed: </span> {{ tyre.viewCount }} times</p>
+            <p class="list-group-item-text"><span class="text-warning">Seller: </span> {{ tyre.seller.fullName }}</p>
+            <p class="list-group-item-text"><span class="text-warning">Category: </span> {{ tyre.category.name }}s</p>
+            <p class="list-group-item-text"><span class="text-warning">Date Added: </span> {{ tyre.createDate|date('F jS \\a\\t g:ia', 'Europe/Sofia') }}</p>
         </div>
         {% if app.User() and (app.getUser().isAdmin() or app.getUser().isSeller(tyre)) %}
             <a href="{{ path('tyres_edit', {'id': tyre.id}) }}">
-                <button type="button" class="btn btn-primary btn-lg btn-block"> Edit</button>
+                <button type="button" class="btn btn-warning btn-lg btn-block"> Edit</button>
             </a>
-                <button type="button" class="btn btn-primary btn-lg btn-block"  data-toggle="modal" data-target="#modalDelete"  role="button"> Delete</button>
+                <button type="button" class="btn btn-danger btn-lg btn-block"  data-toggle="modal" data-target="#modalDelete"  role="button"> Delete</button>
         {% else %}
-            <button type="button" class="btn btn-primary btn-lg btn-block"> Buy Now</button>
+            <a href="{{ path('cart_add', {'tyreId': tyre.id}) }}">
+                <button type="button" class="btn btn-success btn-lg btn-block"> Add To Cart</button></a>
         {% endif %}
         <hr>
     </div>

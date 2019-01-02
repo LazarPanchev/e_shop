@@ -4,43 +4,35 @@
     <h1 class="text-center">Tyres</h1>
     <hr>
     <div class="container">
-        {# display navigation #}
         <div class="pagination justify-content-center">
             {{ knp_pagination_render(pagination) }}
         </div>
-
-        <div class="list-group">
+        <div>
             {% for tyre in pagination %}
-                <a href="{{ path('tyres_view_one', {'id': tyre.id}) }}" class="list-group-item active">
-                    <!--Heading with class .list-group-item-heading-->
+                <div class="list-group">
+                <div class="list-group-item">
                     <div>
-                        <h3 class="text-warning">{{ tyre.make }} {{ tyre.model }}</h3>
-                        <h4 class="list-group-item-heading">{{ tyre.width }}/{{ tyre.height }}
+                        {# @var tyre \AppBundle\Entity\Tyre #}
+                        <h3 class="text-warning" style="text-align: center">{{ tyre.make }} {{ tyre.model }}</h3>
+                        <h4 class="list-group-item-heading text-success" style="text-align: center">{{ tyre.width }}/{{ tyre.height }}
                             R{{ tyre.diameter }} {{ tyre.speedIndex }} {{ tyre.loadIndex }}</h4>
                         <img class="media-object img-rounded img-responsive" width="100px" height="200px%"
                              src="{{ asset('uploads/images/tyres/' ~ tyre.image) }}"
                              alt="placehold.it/350x250">
-                        <span class="price text-danger" style="margin-left: 600px;">
-                    Price: {{ tyre.price }} lv.
-                            Quantity: {{ tyre.quantity }} left.
+                        <span style="margin-left: 600px;">
+                            <span  class="text-warning">Price: </span ><span style="font-size: 30px" class="price" >{{ tyre.price }}</span>
                 </span>
 
                     </div>
-                    <!--Paragraph with class .list-group-item-text -->
-                    <p class="list-group-item-text">Viewed: {{ tyre.viewCount }}</p>
-                    <p class="list-group-item-text">Seller: {{ tyre.seller.fullName }}</p>
-                    <p class="list-group-item-text">Category: {{ tyre.category.name }}s</p>
-                    <p class="list-group-item-text">Added On: {{ tyre.createDate|date('d-m-y H:i:s') }}s</p>
-                </a>
-                {% if app.getUser() and (not (app.user.isSeller(tyre))) %}
-                    <button type="button" class="btn btn-primary btn-lg btn-block"> Buy Now</button>
-                {% else %}
-                    <a href="{{ path('tyres_view_one', {'id': tyre.id}) }}">
-                        <button type="button" class="btn btn-primary btn-lg btn-block"> View</button>
-                    </a>
-                {% endif %}
+                    <span  class="text-warning" style="bottom: auto">Quantity:  </span><span class="quantity">{{ tyre.quantity  }}</span> left
+                    <p class="list-group-item-text"><span class="text-warning">Viewed: </span> {{ tyre.viewCount }} times</p>
+                    <p class="list-group-item-text"><span class="text-warning">Seller: </span> {{ tyre.seller.fullName }}</p>
+                    <p class="list-group-item-text"><span class="text-warning">Category: </span> {{ tyre.category.name }}s</p>
+                </div>
+                    <a href="{{ path('tyres_view_one', {'id': tyre.id}) }}"><button type="button" class="btn btn-primary btn-lg btn-block"> View details</button></a>
                 <hr>
-                {% else %}
+            </div>
+            {% else %}
                 <h2>No Tyres Found. Please, try again!</h2>
             {% endfor %}
         </div>
@@ -50,4 +42,54 @@
     <div class="pagination justify-content-center">
         {{ knp_pagination_render(pagination) }}
     </div>
+
+    {#<h1 class="text-center">Tyres</h1>#}
+    {#<hr>#}
+    {#<div class="container">#}
+         {#display navigation#}
+        {#<div class="pagination justify-content-center">#}
+            {#{{ knp_pagination_render(pagination) }}#}
+        {#</div>#}
+                {#<!--Heading with class .list-group-item-heading-->#}
+                {#<div>#}
+                    {#{% for tyre in pagination %}#}
+                        {#<a href="{{ path('tyres_view_one', {'id': tyre.id}) }}" class="list-group-item active">#}
+                            {#<!--Heading with class .list-group-item-heading-->#}
+                            {#<div>#}
+                                {#<h3 class="text-warning">{{ tyre.make }} {{ tyre.model }}</h3>#}
+                                {#<h4 class="list-group-item-heading">{{ tyre.width }}/{{ tyre.height }}#}
+                                    {#R{{ tyre.diameter }} {{ tyre.speedIndex }} {{ tyre.loadIndex }}</h4>#}
+                                {#<img class="media-object img-rounded img-responsive" width="100px" height="200px%"#}
+                                     {#src="{{ asset('uploads/images/tyres/' ~ tyre.image) }}"#}
+                                     {#alt="placehold.it/350x250">#}
+                                {#<span class="price text-danger" style="margin-left: 600px;">#}
+                    {#Price: {{ tyre.price }} lv.#}
+                            {#Quantity: {{ tyre.quantity }} left.#}
+                {#</span>#}
+
+                            {#</div>#}
+                            {#<!--Paragraph with class .list-group-item-text -->#}
+                            {#<p class="list-group-item-text">Viewed: {{ tyre.viewCount }}</p>#}
+                            {#<p class="list-group-item-text">Seller: {{ tyre.seller.fullName }}</p>#}
+                            {#<p class="list-group-item-text">Category: {{ tyre.category.name }}s</p>#}
+                            {#<p class="list-group-item-text">Added On: {{ tyre.createDate|date('d-m-y H:i:s') }}s</p>#}
+                        {#</a>#}
+                        {#{% if app.getUser() and (not (app.user.isSeller(tyre))) %}#}
+                            {#<button type="button" class="btn btn-primary btn-lg btn-block"> Buy Now</button>#}
+                        {#{% else %}#}
+                            {#<a href="{{ path('tyres_view_one', {'id': tyre.id}) }}">#}
+                                {#<button type="button" class="btn btn-primary btn-lg btn-block"> View</button>#}
+                            {#</a>#}
+                        {#{% endif %}#}
+                        {#<hr>#}
+                    {#{% else %}#}
+                        {#<h2>No Tyres Found. Please, try again!</h2>#}
+                    {#{% endfor %}#}
+                {#</div>#}
+            {#</div>#}
+
+    {# display navigation #}
+    {#<div class="pagination justify-content-center">#}
+        {#{{ knp_pagination_render(pagination) }}#}
+    {#</div>#}
 {% endblock %}
