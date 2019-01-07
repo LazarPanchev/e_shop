@@ -16,6 +16,8 @@ interface TyreServiceInterface
 {
     public function findAll();
 
+    public function findTyreByTyreId($tyreId);
+
     public function findOne(int $id);
 
     public function findById(int $id);
@@ -25,4 +27,6 @@ interface TyreServiceInterface
     public function delete(Tyre $tyre);
 
     public function findTyresByCartId($cartId);
+
+
 }

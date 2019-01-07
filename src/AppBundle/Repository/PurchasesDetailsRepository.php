@@ -23,4 +23,52 @@ class PurchasesDetailsRepository extends EntityRepository
         parent::__construct($em,
             new Mapping\ClassMetadata(PurchasesDetails::class));
     }
+
+    /**
+     * @param PurchasesDetails $purchasesDetails
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function save(PurchasesDetails $purchasesDetails){
+        $this->_em->persist($purchasesDetails);
+        $this->_em->flush();
+    }
+
+    public function findByCartId($cartId)
+    {
+        $query = $this->createQueryBuilder('pd')
+            ->select('pd,tyre')
+            ->innerJoin('pd.tyre','tyre')
+            ->where('pd.cart = :cardId')
+            ->andWhere('pd.status = 0')
+            ->setParameter('cardId',$cartId)
+            ->getQuery();
+        return $query->getResult();
+    }
+
+    /**
+     * @param $tyreId
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findByTyreId($tyreId)
+    {
+        $query=$this->createQueryBuilder('pd')
+            ->select('pd')
+            ->where('pd.tyre = :tyreId')
+            ->setParameter('tyreId',$tyreId)
+            ->andWhere('pd.status = 0')
+            ->getQuery();
+        return $query->getSingleResult();
+    }
+
+    /**
+     * @param $purchaseDetails
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function delete($purchaseDetails)
+    {
+        $this->_em->remove($purchaseDetails);
+        $this->_em->flush();
+    }
 }

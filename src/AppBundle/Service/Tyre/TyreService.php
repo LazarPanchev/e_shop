@@ -29,6 +29,10 @@ class TyreService implements TyreServiceInterface
         return $this->tyreRepository->findAll();
     }
 
+    public function findTyreByTyreId($tyreId){
+        return $this->tyreRepository->find($tyreId);
+    }
+
     /**
      * @param int $id
      * @return Tyre

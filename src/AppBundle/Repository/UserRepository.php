@@ -27,11 +27,13 @@ class UserRepository extends EntityRepository
 
     /**
      * @param User $user
+     * @return int
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(User $user){
         $this->_em->persist($user);
         $this->_em->flush();
+        return $user->getId();
     }
 
 }

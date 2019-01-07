@@ -37,8 +37,8 @@ class Purchase
 
     /**
      * @var string
-     * @ORM\Column(name="deliveryAdress", type="string", length=255)
-     * @Assert\NotBlank()
+     * @ORM\Column(name="deliveryAddress", type="string", length=255)
+     * @Assert\NotBlank(message="You must enter a delivery address!")
      */
     private $deliveryAddress;
 
@@ -73,13 +73,6 @@ class Purchase
         return $this->id;
     }
 
-    /**
-     * Set userId
-     *
-     * @param integer $userId
-     *
-     * @return Purchase
-     */
     public function setUserId($userId)
     {
         $this->userId = $userId;
@@ -175,6 +168,11 @@ class Purchase
     public function getPurchasesDetails()
     {
         return $this->purchasesDetails;
+    }
+
+
+    public function setPurchasesDetails($purchaseDetails){
+        $this->purchasesDetails=$purchaseDetails;
     }
 
     /**

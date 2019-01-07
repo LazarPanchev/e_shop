@@ -9,10 +9,13 @@
 namespace AppBundle\Service\User;
 
 
+use AppBundle\Entity\Cart;
 use AppBundle\Entity\Role;
 use AppBundle\Entity\User;
+use AppBundle\Repository\CartRepository;
 use AppBundle\Repository\RoleRepository;
 use AppBundle\Repository\UserRepository;
+use JMS\Serializer\Tests\Fixtures\Discriminator\Car;
 
 class UserService implements UserServiceInterface
 {
@@ -29,11 +32,19 @@ class UserService implements UserServiceInterface
     private $roleRepository;
 
 
+    /**
+     * @var CartRepository
+     */
+    private $cartRepository;
+
+
     public function __construct(UserRepository $userRepository,
-                                RoleRepository $roleRepository)
+                                RoleRepository $roleRepository,
+                                CartRepository $cartRepository)
     {
         $this->userRepository = $userRepository;
         $this->roleRepository = $roleRepository;
+        $this->cartRepository = $cartRepository;
     }
 
 
@@ -52,10 +63,10 @@ class UserService implements UserServiceInterface
         $this->checkIsAdmin($user);
 
         $user->setPassword($encodePassword);
-        if(null !== $user->getAvatar()){
-            $avatar=$user->getAvatar() . '.jpg';
+        if (null !== $user->getAvatar()) {
+            $avatar = $user->getAvatar() . '.jpg';
             $user->setAvatar($avatar);
-        }else{
+        } else {
             $user->setAvatar('no_avatar.jpg');
         }
 
@@ -63,7 +74,11 @@ class UserService implements UserServiceInterface
             $user->setMoney(self::INITIAL_MONEY);
         }
 
-        $this->userRepository->save($user);
+        $userId =$this->userRepository->save($user);
+
+        $cart = new Cart();
+        $cart->setUser($user);
+        $this->cartRepository->save($cart);
     }
 
     public function findValidUsers()
@@ -86,12 +101,13 @@ class UserService implements UserServiceInterface
      * @param User $user
      * @return void
      */
-    private function checkIsAdmin(User $user){
-        $users=$this->userRepository->findAll();
+    private function checkIsAdmin(User $user)
+    {
+        $users = $this->userRepository->findAll();
 
-        if(count($users)==0){
+        if (count($users) == 0) {
             /** @var Role $roleAdmin */
-            $roleAdmin=$this->roleRepository->findOneBy(['name'=>'ROLE_ADMIN']);
+            $roleAdmin = $this->roleRepository->findOneBy(['name' => 'ROLE_ADMIN']);
             $user->addRole($roleAdmin);
         }
     }
@@ -99,5 +115,15 @@ class UserService implements UserServiceInterface
     public function findById($id)
     {
         return $this->userRepository->find($id);
+    }
+
+    /**
+     * @param $user
+     * @return int
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function save($user)
+    {
+        return $this->userRepository->save($user);
     }
 }

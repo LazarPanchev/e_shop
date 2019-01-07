@@ -48,7 +48,6 @@ class UserController extends Controller
         try {
             $user = $this->getUser();
                 $amount =$request->request->get('amount');
-//            return new Response(json_encode([floatval($amount['amount'])]));
             $deposit=floatval($amount['amount']);
             if($deposit>0){
                 $userMoney=$user->getMoney();

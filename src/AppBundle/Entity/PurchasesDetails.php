@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -28,11 +29,11 @@ class PurchasesDetails
     private $purchaseId;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(name="tyreId", type="integer")
+     * @var Tyre
+     *@ORM\ManyToOne(targetEntity="AppBundle\Entity\Tyre")
+     * @ORM\JoinColumn(name="tyre", referencedColumnName="id")
      */
-    private $tyreId;
+    private $tyre;
 
     /**
      * @var int
@@ -45,6 +46,26 @@ class PurchasesDetails
      * @ORM\Column(name="price", type="decimal", precision=10, scale=2)
      */
     private $price;
+
+    /**
+     * @var Cart
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Cart", inversedBy="purchase_details")
+     * @ORM\JoinColumn(name="cart_id", referencedColumnName="id")
+     */
+    private $cart;
+
+    /**
+     * @var boolean
+     * @ORM\Column(name="status", type="smallint", nullable=false)
+     */
+    private $status;
+
+    public function __construct()
+    {
+        $this->quantity=1;
+        $this->price=1;
+        $this->status=0;
+    }
 
 
     /**
@@ -59,7 +80,7 @@ class PurchasesDetails
     /**
      * Set purchaseId
      *
-     * @param integer $purchaseId
+     * @param integer
      *
      * @return PurchasesDetails
      */
@@ -81,28 +102,24 @@ class PurchasesDetails
     }
 
     /**
-     * Set tyreId
-     *
-     * @param integer $tyreId
-     *
-     * @return PurchasesDetails
+     * @return Tyre
      */
-    public function setTyreId($tyreId)
+    public function getTyre()
     {
-        $this->tyreId = $tyreId;
-
-        return $this;
+        return $this->tyre;
     }
 
     /**
-     * Get tyreId
-     *
-     * @return int
+     * @param Tyre $tyre
+     * @return PurchasesDetails
      */
-    public function getTyreId()
+    public function setTyre(Tyre $tyre)
     {
-        return $this->tyreId;
+        $this->tyre = $tyre;
+        return $this;
     }
+
+
 
     /**
      * Set quantity
@@ -151,5 +168,38 @@ class PurchasesDetails
     {
         return $this->price;
     }
+
+    /**
+     * @return Cart
+     */
+    public function getCart(): Cart
+    {
+        return $this->cart;
+    }
+
+    /**
+     * @param Cart $cart
+     */
+    public function setCart(Cart $cart)
+    {
+        $this->cart = $cart;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param bool $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
 }
 

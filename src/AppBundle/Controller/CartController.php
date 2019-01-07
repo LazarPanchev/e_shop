@@ -4,11 +4,15 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Cart;
 use AppBundle\Entity\Purchase;
+use AppBundle\Entity\PurchasesDetails;
 use AppBundle\Entity\Tyre;
+use AppBundle\Entity\User;
 use AppBundle\Form\PurchaseType;
 use AppBundle\Service\Cart\CartServiceInterface;
 use AppBundle\Service\Purchase\PurchaseServiceInterface;
 use AppBundle\Service\Tyre\TyreServiceInterface;
+use AppBundle\Service\User\UserServiceInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,117 +29,168 @@ class CartController extends Controller
      * @var CartServiceInterface
      */
     private $cartService;
+    /**
+     * @var PurchaseServiceInterface
+     */
+    private $purchaseService;
 
     /**
      * @var TyreServiceInterface
      */
     private $tyreService;
 
+    /**
+     * @var UserServiceInterface
+     */
+    private $userService;
+
 
     public function __construct(CartServiceInterface $cartService,
-                                TyreServiceInterface $tyreService)
+                                PurchaseServiceInterface $purchaseService,
+                                TyreServiceInterface $tyreService,
+                                UserServiceInterface $userService)
     {
         $this->cartService = $cartService;
+        $this->purchaseService = $purchaseService;
         $this->tyreService = $tyreService;
+        $this->userService = $userService;
     }
 
     /**
      * @Route("/show", name="cart_show")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function showCartAction(Request $request)
     {
+        /** @var User $currentUser */
         $currentUser = $this->getUser();
-        if (null === $currentUser) {
-            $this->addFlash('error', 'You must Register or Log in to use shopping cart');
-            return $this->redirectToRoute('homepage');
-        }
+        $this->checkForNull($currentUser);
 
         /** @var Cart $cart */
         $cart = $this
             ->cartService
-            ->findCartByUserId($currentUser->getId());
-        $tyres = $this
-            ->tyreService
-            ->findTyresByCartId($cart->getId());
+            ->findCartByUserId($currentUser->getid());
+
+        $purchaseDetails = $this
+            ->purchaseService
+            ->findPurchaseDetailsByCartId($cart->getId());
 
         $purchase = new Purchase();
         $form = $this->createForm(PurchaseType::class, $purchase);
         $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            dump('submitted form');
-            exit();
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            return $this->handlePurchaseAction($request,$purchase,$currentUser,$purchaseDetails);
         }
 
         return $this->render("user/cart.html.twig",
-            ['tyres' => $tyres,
-                'form'=>$form->createView()]);
+            ['cart' => $cart,
+                'purchaseDetails' => $purchaseDetails,
+                'form' => $form->createView()]);
     }
 
     /**
      * @Route("/add/{tyreId}", name="cart_add")
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @param $tyreId
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     public function addToCartAction($tyreId)
     {
-        /** @var Tyre $tyre */
-        $tyre = $this
-            ->tyreService
-            ->findOne($tyreId);
-        if (null === $tyre) {
+        if (null === $tyreId) {
             $this->addFlash('error', 'Not selected product. Please choose one!');
             return $this->redirectToRoute('tyres_view_all');
         }
-        $cart = $this->cartService->findCartByUserId($this->getUser()->getId());;
-        if (!$this->cartService->addToCart($tyre, $cart)) {
-            $this->addFlash('error', 'The tyre already exist in your shopping cart!');
-            return $this->redirectToRoute('tyres_view_one', ['id' => $tyreId]);
+
+        /** @var Tyre $tyre */
+        $tyre = $this->tyreService->findTyreByTyreId($tyreId);
+        $existTyre = $this->purchaseService->findPurchaseDetailByTyreId($tyre->getId());
+        if ($existTyre) {
+            $this->addFlash('error', 'Tyre already exist in your shopping cart!');
+            return $this->redirectToRoute('tyres_view_all');
         }
+        $purchaseDetails = new PurchasesDetails();
+        $purchaseDetails->setTyre($tyre);
+        $cart = $this->cartService->findCartByUserId($this->getUser()->getId());
+        $purchaseDetails->setCart($cart);
+
+        try {
+            $this->purchaseService
+                ->savePurchaseDetails($purchaseDetails);
+        } catch (\Exception $exception) {
+            $this->addFlash('error', 'Not selected item!');
+            return $this->redirectToRoute('cart_show');
+        }
+
         return $this->redirectToRoute('cart_show');
     }
 
     /**
-     * @Route("/delete/{tyreId}", name="cart_delete")
-     * @param $tyreId
+     * @Route("/delete/{purchaseDetailsId}", name="cart_delete")
+     * @param $purchaseDetailsId
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function removeFromCartAction($tyreId){
-
-//        /** @var Tyre $tyre */
-//        $tyre = $this
-//            ->tyreService
-//            ->findOne($tyreId);
-        /** @var Cart $cart */
-        $cart = $this->cartService->findCartByUserId($this->getUser()->getId());
-        $cartId=$cart->getId();
-        $this
-            ->cartService
-            ->removeFromCart($tyreId,$cartId);
-
+    public function removeFromCartAction($purchaseDetailsId)
+    {
+        $purchaseDetails = $this->purchaseService->findPurchaseDetailById($purchaseDetailsId);
+        if (null === $purchaseDetails) {
+            $this->addFlash('error', 'Not selected item to remove!');
+            return $this->redirectToRoute('cart_show');
+        }
+        $this->purchaseService->removePurchaseDetail($purchaseDetails);
         return $this->redirectToRoute('cart_show');
-
-//        $cart = $this
-//            ->checkForCurrentUser();
-//        $cart->addPurchase()
-//        dump($cart);
-//        exit();
+    }
 
 
+    /**
+     * @param $data
+     * @return bool|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    private function checkForNull($data)
+    {
+        if (null === $data) {
+            $this->addFlash('error', 'You must Register or Log in to use shopping cart');
+            return $this->redirectToRoute('homepage');
+        }
+        return true;
+    }
 
+    /**
+     * @param $request
+     * @param Purchase $purchase
+     * @param User $currentUser
+     * @param $purchaseDetails
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    private function handlePurchaseAction($request,Purchase $purchase,$currentUser, $purchaseDetails)
+    {
+        $quantitiesArr = $request->request->all()['cart'];
+        $purchase->setUserId($currentUser);
+        $this->purchaseService->savePurchase($purchase);
 
-//        $purchase=new Purchase();
-//        $purchaseDetails= new PurchasesDetails();
-//        $purchaseDetails->setPurchaseId($purchase->getId())->
-//        $purchase->setUserId($currentUserId)
-//            ->setCartId($cart->getId())
-//            ->addPurchasesDetails()
+        $totalPurchaseSum=$this
+            ->purchaseService
+            ->makePurchase($purchaseDetails,$quantitiesArr);
 
-//
-//        $cart->addTyre($tyre);
-//        $this->cartService->saveCart($cart);
+        if(!$totalPurchaseSum){
+            $this->addFlash('error', 'Please select tyre quantity');
+            return $this->redirectToRoute('cart_show');
+        }
 
+        if ($totalPurchaseSum > floatval($currentUser->getMoney())) {
+            $this->addFlash('error', 'Not enough money for this purchase. Please make a deposit!');
+            return $this->redirectToRoute('cart_show');
+        }
 
+        $this->purchaseService
+            ->finalizePurchase($purchaseDetails,$purchase,$quantitiesArr, $currentUser,$totalPurchaseSum);
+        $this->userService
+            ->save($currentUser);
+        $this->addFlash('success', 'Successful purchase');
+        return $this->redirectToRoute('homepage');
     }
 
 }

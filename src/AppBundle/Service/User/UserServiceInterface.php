@@ -24,4 +24,6 @@ interface UserServiceInterface
     public function findAll();
 
     public function findById($id);
+
+    public function save($user);
 }

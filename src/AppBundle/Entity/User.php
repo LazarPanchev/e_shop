@@ -150,12 +150,6 @@ class User implements UserInterface
      */
     private $purchases;
 
-    /**
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Cart", mappedBy="userId")
-     * @ORM\JoinColumn(name="cart_id", referencedColumnName="id")
-     */
-    private $cartId;
-
     public function __construct()
     {
         $this->dateCreated = new \DateTime('now');
@@ -505,22 +499,6 @@ class User implements UserInterface
     public function setAvatar(string $avatar)
     {
         $this->avatar = $avatar;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCartId()
-    {
-        return $this->cartId;
-    }
-
-    /**
-     * @param int $cartId
-     */
-    public function setCartId($cartId)
-    {
-        $this->cartId = $cartId;
     }
 
     /**

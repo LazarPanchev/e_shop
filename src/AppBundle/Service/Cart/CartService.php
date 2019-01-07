@@ -10,6 +10,8 @@ namespace AppBundle\Service\Cart;
 
 
 use AppBundle\Entity\Cart;
+use AppBundle\Entity\Purchase;
+use AppBundle\Entity\PurchasesDetails;
 use AppBundle\Entity\Tyre;
 use AppBundle\Repository\CartRepository;
 use AppBundle\Repository\TyreRepository;
@@ -38,65 +40,36 @@ class CartService implements CartServiceInterface
      * @param int $userId
      * @return mixed
      */
-    public function findCartByUserId(int $userId)
+    public function findCartWithTyresByUserId(int $userId)
     {
-
-        $cart = $this
+        /** @var Cart $cart */
+        $cart=$this
             ->cartRepository
-            ->findBy(['userId' => $userId]);
-
-        if (count($cart) === 0) {
+            ->findOneBy(['userId'=>$userId]);
+        if (null === $cart) {
             $cart = new Cart();
+        }else{
+            $tyres=$this->tyreRepository->findTyresInCart($cart->getId());
+            $cart->setTyres($tyres);
         }
 
-        return ($cart[0]);
+        return $cart;
     }
 
-    /**
-     * @param Tyre $tyre
-     * @param Cart $cart
-     * @return bool
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function addToCart($tyre, $cart)
+
+    public function findCartByCartId($cartId)
     {
-        if ($cart->isTyreInCart($tyre->getId())) {
-            return false;
+        return $this->cartRepository->find($cartId);
+    }
+
+    public function findCartByUserId($userId)
+    {
+//        $cart = $this->cartRepository->findBy(['user'=>$userId]);
+        $cart = $this->cartRepository->findCartWithPurchasesDetails($userId);
+        if(count($cart) === 0){
+            return null;
         }
+        return $cart[0];
 
-        $cart->addTyre($tyre);
-        $this->cartRepository
-            ->save($cart);
-        return true;
-    }
-
-    /**
-     * @param $tyreId
-     * @param $cartId
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function removeFromCart($tyreId, $cartId)
-    {
-//        /** @var Tyre[] $tyres */
-//        $tyres = $this
-//            ->cartRepository
-//            ->removeTyreFromCart($tyreId,$cartId);
-//        /** @var Cart $cart */
-//        $cart=$this->cartRepository->find($cartId);
-//
-//      /**
-//       * @var Tyre $tyre
-//       */
-//        foreach ($tyres as $key=>$tyre){
-//            if($tyre->getId()===intval($tyreId)){
-//                unset($tyres[$key]);
-//            }
-//        }
-//
-//        $cart->setTyres($tyres);
-//        $this->cartRepository->save($cart);
-        $result= $this
-            ->cartRepository
-            ->removeTyreFromCart($tyreId,$cartId);
     }
 }

@@ -13,9 +13,9 @@ use AppBundle\Entity\Cart;
 
 interface CartServiceInterface
 {
-    public function findCartByUserId(int $userId);
+    public function findCartWithTyresByUserId(int $userId);
 
-    public function addToCart($tyre, $cart);
+    public function findCartByCartId($cartId);
 
-    public function removeFromCart($tyreId,$cartId);
+    public function findCartByUserId($userId);
 }

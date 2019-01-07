@@ -24,14 +24,33 @@ class CartRepository extends EntityRepository
             new Mapping\ClassMetadata(Cart::class));
     }
 
+//    /**
+//     * @param $userId
+//     * @return mixed
+//     * @throws \Doctrine\ORM\NoResultException
+//     * @throws \Doctrine\ORM\NonUniqueResultException
+//     */
+//    public function findCartByUserId($userId){
+//        return $this->createQueryBuilder('cart')
+//            ->select('cart')
+//            ->from('AppBundle:Cart','c')
+//            ->leftJoin('cart.tyres','tyres')
+//            ->where('cart.userId = :id')
+//            ->setParameter(':id',$userId)
+//            ->getQuery()
+//            ->getSingleResult();
+//    }
+
     /**
      * @param $cart
+     * @return int
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(Cart $cart)
     {
         $this->_em->persist($cart);
         $this->_em->flush();
+        return $cart->getId();
     }
 
 //    /**
@@ -45,13 +64,38 @@ class CartRepository extends EntityRepository
 
     public function removeTyreFromCart($tyreId,$cartId){
 //        $query=$this->createQueryBuilder('c')
-//            ->select('c.tyres')
-//            ->addSelect('tyres.carts')
 //            ->from('AppBundle:Cart','cart')
-//            ->innerJoin('c.tyres', 'tyres')
+//            ->innerJoin('c.tyres', 'tyres', 'WITH', 'c.id = :cartId')
 //            ->where('c.id = :cartId')
 //            ->setParameter('cartId',$cartId)
-//            ->getQuery();
+//            ->getQuery()
+//            ->getResult();
+//        dump($query);
+//        exit();
+        $query=$this->createQueryBuilder('c')
+            ->select('c')
+            ->from('AppBundle:Cart','cart')
+            ->leftJoin('c.tyres','tyres', 'WITH','c.id = :cartId')
+            ->setParameter('cartId',$cartId)
+            ->where('tyres.id = :tyreId')
+            ->setParameter('tyreId',$tyreId)
+            ->getQuery()
+            ->getResult();
+        dump($query);
+        exit();
+
+    }
+
+    public function findCartWithPurchasesDetails($userId)
+    {
+        $query =$this->createQueryBuilder('cart')
+            ->select('cart,purchaseDetails')
+            ->from('AppBundle:Cart', 'c')
+            ->where('cart.user = :userId')
+            ->setParameter('userId',$userId)
+            ->leftJoin('cart.purchase_details','purchaseDetails')
+            ->getQuery();
+        return $query->getResult();
 
     }
 

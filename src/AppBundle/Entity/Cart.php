@@ -24,28 +24,22 @@ class Cart
     private $id;
 
     /**
-     * @var ArrayCollection|Tyre[]
-     *
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Tyre", inversedBy="carts")
-     * @ORM\JoinTable(name="carts_tyres",
-     *     joinColumns={@ORM\JoinColumn(name="cart_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="tyre", referencedColumnName="id")}
-     *     )
+     * @var ArrayCollection|PurchasesDetails[]
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\PurchasesDetails", mappedBy="cart")
      */
-    private $tyres;
+    private $purchase_details;
 
 
     /**
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\User", inversedBy="cartId")
+     * @var User
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
-    private $userId;
-
-
+    private $user;
 
     public function __construct()
     {
-        $this->tyres= new ArrayCollection();
+        $this->purchase_details= new ArrayCollection();
     }
 
 
@@ -60,69 +54,61 @@ class Cart
     }
 
     /**
-     * Set userId
-     *
-     * @param integer $userId
-     *
+     * @return PurchasesDetails[]|ArrayCollection
+     */
+    public function getPurchaseDetails()
+    {
+        return $this->purchase_details;
+    }
+
+    /**
+     * @param PurchasesDetails[]|ArrayCollection $purchase_details
+     */
+    public function setPurchaseDetails($purchase_details)
+    {
+        $this->purchase_details = $purchase_details;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
      * @return Cart
      */
-    public function setUserId($userId)
+    public function setUser(User $user)
     {
-        $this->userId = $userId;
-
-        return $this;
-    }
-
-    /**
-     * Get userId
-     *
-     * @return int
-     */
-    public function getUserId()
-    {
-        return $this->userId;
-    }
-
-    /**
-     * @return Tyre[]|ArrayCollection
-     */
-    public function getTyres()
-    {
-        return $this->tyres;
-    }
-
-    /**
-     * @param ArrayCollection|Tyre[]
-     * @return Cart
-     */
-    public function setTyres($tyres){
-        foreach ($tyres as $tyre){
-            $this->tyres[]=$tyre;
-        }
+        $this->user = $user;
         return $this;
     }
 
 
-    /**
-     * @param Tyre $tyre
-     * @return Cart
-     */
-    public function addTyre(Tyre $tyre)
-    {
-        $tyre->setDateAdded(new \DateTime('now'));
-        $this->tyres[] = $tyre;
-
-        return $this;
-    }
+//    /**
+//     * @param Tyre $tyre
+//     * @return Cart
+//     */
+//    public function addTyre(Tyre $tyre)
+//    {
+//        $tyre->setDateAdded(new \DateTime('now'));
+//        $this->tyres[] = $tyre;
+//
+//        return $this;
+//    }
 
     public function isTyreInCart($tyreId){
-        foreach ($this->tyres as $tyre){
-            if ($tyre->getId() === $tyreId){
-                return true;
-            }
-        }
-        return false;
+//        foreach ($this->purchase_details as $purchase_detail){
+//            if ($purchase_detail->->getId() === $tyreId){
+//                return true;
+//            }
+//        }
+//        return false;
     }
+
 
 }
 

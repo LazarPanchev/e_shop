@@ -3,6 +3,7 @@
 namespace AppBundle\Repository;
 
 use AppBundle\Entity\Purchase;
+use AppBundle\Entity\PurchasesDetails;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping;
@@ -23,4 +24,14 @@ class PurchaseRepository extends EntityRepository
         parent::__construct($em,
             new Mapping\ClassMetadata(Purchase::class));
     }
+
+    /**
+     * @param $purchase
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function save($purchase){
+        $this->_em->persist($purchase);
+        $this->_em->flush();
+    }
+
 }

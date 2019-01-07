@@ -46,15 +46,17 @@
                         <a class="nav-link" href="{{ path('tyres_view_mine') }}">My tyres <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="{{ path('tyres_create') }}">Sell tyre <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="{{ path('tyres_create') }}">Sell tyre <span
+                                    class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item active">
-                        <a class="nav-link" href="{{ path('users_profile', {'id': app.user.id}) }}">My profile <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="{{ path('users_profile', {'id': app.user.id}) }}">My profile <span
+                                    class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item active">
-                       <a class="nav-link" href="{{ path('cart_show') }}">Shopping Cart <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" href="{{ path('cart_show') }}">Shopping Cart <span
+                                    class="sr-only">(current)</span></a>
                     </li>
-
                     <li class="nav-item active">
                         <a class="nav-link" href="{{ path('security_logout') }}">Logout <span
                                     class="sr-only">(current)</span></a>
@@ -99,27 +101,27 @@
 </main>
 
 {% block footer %}
-<footer>
-    <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0"
-             aria-valuemax="100"></div>
-    </div>
-    <nav class="navbar">
-        <div class="navbar-footer">
-            <div>
-                <a href="{{ path('homepage') }}">Contacts</a>
-            </div>
-            <div>
-                <a href="{{ path('homepage') }}">About</a>
-            </div>
+    <footer>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0"
+                 aria-valuemax="100"></div>
         </div>
-        <p class="navbar-text navbar-right">E_Shop &copy; 2018</p>
-    </nav>
-    <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0"
-             aria-valuemax="100"></div>
-    </div>
-</footer>
+        <nav class="navbar">
+            <div class="navbar-footer">
+                <div>
+                    <a href="{{ path('homepage') }}">Contacts</a>
+                </div>
+                <div>
+                    <a href="{{ path('homepage') }}">About</a>
+                </div>
+            </div>
+            <p class="navbar-text navbar-right">E_Shop &copy; 2018</p>
+        </nav>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0"
+                 aria-valuemax="100"></div>
+        </div>
+    </footer>
 {% endblock %}
 </body>
 </html>
