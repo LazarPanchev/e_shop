@@ -106,6 +106,10 @@ class CartController extends Controller
 
         /** @var Tyre $tyre */
         $tyre = $this->tyreService->findTyreByTyreId($tyreId);
+        if($tyre->getQuantity()==0){
+            $this->addFlash('error', 'Tyre out of stock. Please choose another one.');
+            return $this->redirectToRoute('tyres_view_all');
+        }
         $existTyre = $this->purchaseService->findPurchaseDetailByTyreId($tyre->getId());
         if ($existTyre) {
             $this->addFlash('error', 'Tyre already exist in your shopping cart!');

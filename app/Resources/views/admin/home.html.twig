@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <hr>
+    <div class="widget center">
+        <div class="blur"></div>
+        <div class="text center">
+            <h1 class="display-3">ADMIN PANEL</h1>
+            {# @var user \AppBundle\Entity\User #}
+            <hr>
+            <div style="text-align: center">
+            <a href="{{ path('admin_users') }}"><button class="btn-primary">ALL USERS</button></a>
+            <hr>
+            <a href="{{ path('purchase_all') }}"><button class="btn-primary">ALL PURCHASES</button></a>
+            <hr>
+            </div>
+        </div>
+    </div>    <hr>
+
+{% endblock %}
+
+

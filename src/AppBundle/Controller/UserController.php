@@ -17,6 +17,9 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class UserController extends Controller
 {
+    /**
+     * @var UserServiceInterface
+     */
     private $userService;
 
     public function __construct(UserServiceInterface $userService)
@@ -84,6 +87,4 @@ class UserController extends Controller
         return $this->render('user/profile.html.twig',
             ['user'=>$currentUser]);
     }
-
-
 }

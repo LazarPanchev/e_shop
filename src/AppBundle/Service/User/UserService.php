@@ -94,7 +94,7 @@ class UserService implements UserServiceInterface
 
     public function findAll()
     {
-        // TODO: Implement findAll() method.
+        return $this->userRepository->findAll();
     }
 
     /**

@@ -10,9 +10,10 @@ namespace AppBundle\Service\Purchase;
 
 
 use AppBundle\Entity\PurchasesDetails;
-use AppBundle\Entity\User;
+use AppBundle\Entity\Tyre;
 use AppBundle\Repository\PurchaseRepository;
 use AppBundle\Repository\PurchasesDetailsRepository;
+use AppBundle\Repository\TyreRepository;
 
 class PurchaseService implements PurchaseServiceInterface
 {
@@ -26,11 +27,18 @@ class PurchaseService implements PurchaseServiceInterface
      */
     private $purchaseRepository;
 
+    /**
+     * @var TyreRepository
+     */
+    private $tyreRepository;
+
     public function __construct(PurchasesDetailsRepository $purchasesDetailsRepository,
-                                PurchaseRepository $purchaseRepository)
+                                PurchaseRepository $purchaseRepository,
+                                TyreRepository $tyreRepository)
     {
         $this->purchasesDetailsRepository = $purchasesDetailsRepository;
         $this->purchaseRepository = $purchaseRepository;
+        $this->tyreRepository=$tyreRepository;
     }
 
     /**
@@ -58,10 +66,11 @@ class PurchaseService implements PurchaseServiceInterface
         return $this->purchaseRepository->save($purchase);
     }
 
-    public function findPurchaseDetailByTyreId($tyreId){
-        try{
+    public function findPurchaseDetailByTyreId($tyreId)
+    {
+        try {
             $tyre = $this->purchasesDetailsRepository->findByTyreId($tyreId);
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return null;
         }
         return $tyre;
@@ -86,15 +95,15 @@ class PurchaseService implements PurchaseServiceInterface
      * @param $quantitiesArr
      * @return bool|float|int
      */
-    public function makePurchase($purchaseDetails,$quantitiesArr)
+    public function makePurchase($purchaseDetails, $quantitiesArr)
     {
         $index = 'quantity';
         $totalPurchaseSum = 0;
 
         for ($i = 0; $i < count($purchaseDetails); $i++) {
             $currentQuantity = intval($quantitiesArr[$index . ($i + 1)]);
-            if($quantitiesArr[$index . ($i + 1)]===''){
-               return false;
+            if ($quantitiesArr[$index . ($i + 1)] === '') {
+                return false;
             }
             $currentPrice = $currentQuantity * $purchaseDetails[$i]->getTyre()->getPrice();
             $totalPurchaseSum += $currentPrice;
@@ -110,9 +119,9 @@ class PurchaseService implements PurchaseServiceInterface
      * @param $totalPurchaseSum
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function finalizePurchase($purchaseDetails,$purchase,$quantitiesArr,$currentUser, $totalPurchaseSum)
+    public function finalizePurchase($purchaseDetails, $purchase, $quantitiesArr, $currentUser, $totalPurchaseSum)
     {
-        $index='quantity';
+        $index = 'quantity';
         for ($i = 0; $i < count($purchaseDetails); $i++) {
             /** @var PurchasesDetails $currentPurchase */
             $currentPurchase = $purchaseDetails[$i];
@@ -123,8 +132,21 @@ class PurchaseService implements PurchaseServiceInterface
             $currentPurchase->setPrice($totalPrice);
             $currentPurchase->setStatus(1);
             $this->savePurchaseDetails($currentPurchase);
+            /** @var PurchasesDetails $purchaseDetails */
+            $tyreId=$currentPurchase->getTyre()->getId();
+            /** @var Tyre $tyre */
+            $tyre=$this->tyreRepository->find($tyreId);
+            $oldQuantity=intval($tyre->getQuantity());
+            $tyre->setQuantity($oldQuantity-$quantity);
+            $this->tyreRepository->save($tyre);
         }
         $userMoney = floatval($currentUser->getMoney());
         $currentUser->setMoney($userMoney - $totalPurchaseSum);
+
+    }
+
+    public function findAll()
+    {
+        return $this->purchaseRepository->findAllPurchases();
     }
 }

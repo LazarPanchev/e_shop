@@ -25,8 +25,4 @@ interface TyreServiceInterface
     public function create(Tyre $tyre, string $fileName);
 
     public function delete(Tyre $tyre);
-
-    public function findTyresByCartId($cartId);
-
-
 }

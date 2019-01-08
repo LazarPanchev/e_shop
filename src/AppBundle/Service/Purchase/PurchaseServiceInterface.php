@@ -29,4 +29,6 @@ interface PurchaseServiceInterface
 
     public function finalizePurchase($purchaseDetails,$purchase,$quantitiesArr, $currentUser,$totalPurchaseSum);
 
+    public function findAll();
+
 }

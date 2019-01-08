@@ -16,6 +16,4 @@ interface SearchServiceInterface
     public function searchBySize($request);
 
     public function searchByBrand($request);
-
-
 }

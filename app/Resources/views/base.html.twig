@@ -61,6 +61,12 @@
                         <a class="nav-link" href="{{ path('security_logout') }}">Logout <span
                                     class="sr-only">(current)</span></a>
                     </li>
+                    {% if is_granted("ROLE_ADMIN") %}
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ path('admin_home') }}" style="color: yellow">Admin Panel <span
+                                        class="sr-only">(current)</span></a>
+                        </li>
+                    {% endif %}
                 {% else %}
                     <li class="nav-item active">
                         <a class="nav-link" href="{{ path('users_register') }}">Register <span
@@ -82,14 +88,14 @@
 </header>
 <main>
     {% for msg in app.session.flashBag.get('success') %}
-        <div class="alert alert-dismissible alert-success text-center" id="success" style="position: fixed; left: 30%">
+        <div class="alert alert-dismissible alert-success text-center" id="success" style="position: center;">
             <button type="button" class="close" data-dismiss="alert"></button>
             <strong>Well done! {{ msg }}</strong>
         </div>
     {% endfor %}
 
     {% for msg in app.session.flashBag.get('error') %}
-        <div class="alert alert-dismissible alert-danger text-center" id="error" style="position: fixed; left: 30%">
+        <div class="alert alert-dismissible alert-danger text-center" id="error" style="position: center;">
             <button type="button" class="close" data-dismiss="alert"></button>
             <strong>Oh snap! {{ msg }}</strong>
         </div>
@@ -109,10 +115,10 @@
         <nav class="navbar">
             <div class="navbar-footer">
                 <div>
-                    <a href="{{ path('homepage') }}">Contacts</a>
+                    <a href="{{ path('contact_page') }}">Contacts</a>
                 </div>
                 <div>
-                    <a href="{{ path('homepage') }}">About</a>
+                    <a href="{{ path('about_page') }}">About</a>
                 </div>
             </div>
             <p class="navbar-text navbar-right">E_Shop &copy; 2018</p>

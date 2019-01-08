@@ -201,5 +201,11 @@ class PurchasesDetails
         $this->status = $status;
     }
 
+    public function __toString()
+    {
+        $printResult = sprintf("Purchase quantity: $this->quantity pc. On price: $this->price" . PHP_EOL) ;
+        return $printResult;
+    }
+
 }
 

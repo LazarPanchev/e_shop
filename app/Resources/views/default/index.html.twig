@@ -4,9 +4,10 @@
 <html lang="en">
 <body>
 <header>
-    <div class="view">
+    <div class="jumbotron" style="margin-top: 20px">
         <div class="mask rgba-gradient align-items-center">
             <div class="container">
+                <h1 style="text-align: center; font-size: 60px; color: yellowgreen">Tyres Place</h1>
                 <div class="row mt-5">
                     <div class="col-md-6 mb-5 mt-md-0 mt-5 white-text text-center text-md-left">
                         <h3 class="h1-responsive font-weight-bold wow fadeInLeft" data-wow-delay="0.3s"
@@ -22,18 +23,16 @@
                             <p><a class="btn btn-primary btn-lg" href="{{ path('security_login') }}" role="button">Login
                                     &raquo;</a></p>
                         </div>
-                        <h6 class="mb-3 wow fadeInLeft" data-wow-delay="0.3s">Lorem ipsum dolor sit amet, consectetur
-                            adipisicing elit. Rem repellendus quasi fuga
-                            nesciunt dolorum nulla magnam veniam sapiente, fugiat! Commodi sequi non animi ea
-                            dolor molestiae, quisquam iste, maiores. Nulla.</h6>
-                        <a class="btn btn-outline-white wow fadeInLeft" data-wow-delay="0.3s">Learn more</a>
+                        <h6 class="mb-3 wow fadeInLeft" data-wow-delay="0.3s">Welcome to our Tyres Shop. Here you can sell or buy tyres. Search tyres
+                        by size or brand.</h6>
+                        <a href="{{ path('about_page') }}" class="btn btn-outline-white wow fadeInLeft" data-wow-delay="0.3s">Learn more</a>
                     </div>
 
                     <!--Grid column-->
                     <!--Grid column-->
                     <div class="col-md-6 col-xl-5 mb-4">
                         {% if app.user %}
-                            <h2>Welcome {{ user.fullName }}!</h2>
+                            <h2  style="color: yellow">Welcome {{ user.fullName }}!</h2>
                             <div class="nav-item">
                                 <p><a class="btn btn-primary btn-lg"
                                       href="{{ path('users_profile', {'id': user.id }) }}" role="button">My profile&raquo;</a></p>
@@ -65,53 +64,6 @@
         </div>
     </div>
 </header>
-<main>
-    <div class="container">
-        <div class="row py-5">
-            <div class="col-md-12 text-center">
-                <p>Welcome to our Online shop. Here you can buy or sell products, add promotions and many more..</p>
-            </div>
-        </div>
-    </div>
-</main>
-
-{#</body>#}
-{#</html>#}
-{#<div class="container">#}
-{#<div class="jumbotron" >#}
-{#<div class="container">#}
-{#<h1 class="display-3">HOME PAGE</h1>#}
-{#<p>Welcome to our Online shop. Here you can buy or sell products, add promotions and many more..</p>#}
-{#{% if app.user %}#}
-{#<h2>Welcome {{ user.fullName }}!</h2>#}
-{#<div class="nav-item">#}
-{#<p><a class="btn btn-primary btn-lg" href="{{ path('users_profile', {'id': user.id }) }}" role="button">My profile &raquo;</a></p>#}
-{#<p><a class="btn btn-primary btn-lg" href="{{ path('tyres_search') }}" role="button">Search By Tyre Size&raquo;</a></p>#}
-{#</div>#}
-{#<div class="nav-item">#}
-{#<p><a class="btn btn-primary btn-lg" href="{{ path('tyres_create') }}" role="button">Sell Tyres &raquo;</a></p>#}
-{#</div>#}
-{#<div class="nav-item">#}
-{#<p><a class="btn btn-primary btn-lg" href="#" role="button">Add Promotion &raquo;</a></p>#}
-{#</div>#}
-{#<div class="nav-item">#}
-{#<p><a class="btn btn-primary btn-lg" href="{{ path('tyres_view_all') }}" role="button">View all tyres &raquo;</a></p>#}
-{#</div>#}
-{#{% else %}#}
-{#<ul class="nav flex-column">#}
-{#<li class="nav-item">#}
-{#<p><a class="btn btn-primary btn-lg" href="{{ path('users_register') }}" role="button">Register &raquo;</a></p>#}
-{#</li>#}
-{#<li class="nav-item">#}
-{#<p><a class="btn btn-primary btn-lg" href="{{ path('security_login') }}" role="button">Login &raquo;</a></p>#}
-{#</li>#}
-
-{#</ul>#}
-{#{% endif %}#}
-{#</div>#}
-{#</div>#}
-{#{% block body %}{% endblock %}#}
-{#</div>#}
 {% endblock %}
 {% block footer %}
     <div class="footer">

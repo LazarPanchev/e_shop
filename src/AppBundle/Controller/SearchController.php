@@ -81,6 +81,9 @@ class SearchController extends Controller
 
     }
 
+    /**]
+     * @return \Symfony\Component\Form\FormInterface
+     */
     private function createFormSize()
     {
         $form = $this

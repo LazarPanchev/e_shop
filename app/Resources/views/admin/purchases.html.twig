@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <h3 style="text-align: center; color:lightsalmon ">All finished purchases</h3>
+    {# @var purchase \AppBundle\Entity\Purchase #}
+    {% for purchase in purchases %}
+        <div class="jumbotron">
+            <div class="text-danger">Buyer:</div>
+            <div>
+                {{ purchase.userId.fullName }}
+            </div>
+            <div class="text-danger">Buyer Address:</div>
+            <div>
+                {{ purchase.userId.address }}
+            </div>
+            <div class="text-danger"> Purchase Delivery address</div>
+            <div>
+                {{ purchase.deliveryAddress }}
+            </div>
+            <div class="text-danger"> Purchase Description</div>
+            <div>
+                {{ purchase.deliveryAddress }}
+            </div>
+            <div class="text-danger"> Purchase made on:</div>
+            <div>
+                {{ purchase.createDate|date("F jS \\a\\t g:ia","Europe/Sofia") }}
+            </div>
+            <div class="text-danger">Purchase Details</div>
+            {% if purchase.purchasesDetails is empty %}
+            <div>
+                <div> No purchases yet!</div>
+            </div>
+                {% else %}
+                    {{ purchase.purchasesDetails|join('')|nl2br}}
+            {% endif %}
+            <hr class="my-4">
+            <hr>
+        </div>
+    {% endfor %}
+{% endblock %}
+

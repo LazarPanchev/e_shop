@@ -34,4 +34,17 @@ class PurchaseRepository extends EntityRepository
         $this->_em->flush();
     }
 
+    /**
+     * @return array
+     */
+    public function findAllPurchases()
+    {
+        $query =$this->createQueryBuilder('purchase')
+            ->select('purchase, user, purchasesDetails')
+            ->from('AppBundle:Purchase', 'p')
+            ->leftJoin('purchase.userId','user')
+            ->leftJoin('purchase.purchasesDetails','purchasesDetails')
+            ->getQuery();
+        return $query->getResult();
+    }
 }

@@ -2,11 +2,13 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Role;
 use AppBundle\Entity\Tyre;
 use AppBundle\Entity\User;
 use AppBundle\Form\TyreType;
 use AppBundle\Service\Comment\CommentServiceInterface;
 use AppBundle\Service\Tyre\TyreServiceInterface;
+use AppBundle\Service\User\UserServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
@@ -24,11 +26,21 @@ class TyreController extends Controller
 {
     const PAGE_LIMIT = 4;
 
+    /**
+     * @var UserServiceInterface
+     */
+    private $userService;
+
+    /**
+     * @var TyreServiceInterface
+     */
     private $tyreService;
 
-    public function __construct(TyreServiceInterface $tyreService)
+    public function __construct(TyreServiceInterface $tyreService,
+                                UserServiceInterface $userService)
     {
         $this->tyreService = $tyreService;
+        $this->userService = $userService;
     }
 
     /**
@@ -94,6 +106,7 @@ class TyreController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var User $currentUser */
             $currentUser = $this->getUser();
             $tyre->setSeller($currentUser);
             $fileName = $this->handlePictureProcess($form);
@@ -105,7 +118,12 @@ class TyreController extends Controller
             $this
                 ->tyreService
                 ->create($tyre, $fileName);
-
+            $role = $this
+                ->getDoctrine()
+                ->getRepository(Role::class);
+            $editorRole = $role->findOneBy(['name' => 'ROLE_EDITOR']);
+            $currentUser->addRole($editorRole);
+            $this->userService->save($currentUser);
             $this->addFlash('success', "Add tyre for sale successful.");
             return $this->redirectToRoute('tyres_view_all');
         }
@@ -163,19 +181,12 @@ class TyreController extends Controller
         $form = $this->createForm(TyreType::class, $tyre);
         $form->handleRequest($request);
         /** @var User $currentUser */
-        $currentUser=$this->getUser();
-        if( !$currentUser->isAdmin() && !$currentUser->isSeller($tyre) ){
+        $currentUser = $this->getUser();
+        if (!$currentUser->isAdmin() && !$currentUser->isSeller($tyre)) {
             return $this->redirectToRoute('homepage');
         }
-
-//        if ($form->isSubmitted() && $form->isValid()) {
-            $this->tyreService->delete($tyre);
-            return $this->redirectToRoute('tyres_view_all');
-//        }
-//
-//        return $this->render('tyre/delete.html.twig',
-//            ['tyre' => $tyre, 'form' => $form->createView()]);
-
+        $this->tyreService->delete($tyre);
+        return $this->redirectToRoute('tyres_view_all');
     }
 
 

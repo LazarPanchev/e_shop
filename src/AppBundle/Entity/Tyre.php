@@ -477,5 +477,14 @@ class Tyre
     {
         $this->quantity = $quantity;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString(){
+        $printResult = sprintf("Make: $this->make. Model $this->model. Size $this->width/$this->height R $this->diameter. Price: $this->price" . PHP_EOL) ;
+        return $printResult;
+    }
+
 }
 

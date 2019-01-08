@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <h3 style="text-align: center; color:lightsalmon ">All registered users</h3>
+    {# @var user \AppBundle\Entity\User #}
+    {% for user in users %}
+        {#<div class="text center">#}
+        {#<p class="lead">{{ user.tyres|join(', ') }} lv.</p>#}
+        {#<p class="lead">{{ user.purchases }} lv.</p>#}
+        {#</div>#}
+        {% if user.isBanned %}
+            <div class="container" style="background-color: darkgray ">
+        {% else %}
+            <div class="container" style="background-color: lightsalmon ">
+        {% endif %}
+        <div class="text-danger">Email Address:</div>
+        <div>
+            {{ user.username }}
+        </div>
+        <div class="text-danger"> FullName:</div>
+        <div>
+            {{ user.fullName }}
+        </div>
+        <div class="text-danger">User Address:</div>
+        <div>
+            {{ user.address }}
+            {#{{ user.tyres|join('')|nl2br }}#}
+        </div>
+        <div class="text-danger"> Phone:</div>
+        <div>
+            {{ user.phone }}
+        </div>
+        <div class="text-danger"> Money:</div>
+        <div>
+            {{ user.money|number_format(2) }} лв.
+        </div>
+        <div class="text-danger"> Date created:</div>
+        <div>
+            {{ user.dateCreated|date("F jS \\a\\t g:ia","Europe/Sofia") }}
+        </div>
+        <div class="text-danger"> User tyres for sale:</div>
+        <div style="color: yellow">
+            {{ user.tyres|join('')|nl2br }}
+        </div>
+        <div class="text-danger"> Is Banned:</div>
+        <div style="color: red">
+            --{{ user.isBanned ? 'Yes' : 'No' }}--
+        </div>
+
+        <div class="text-danger">User Roles:</div>
+        <div style="color: red">
+            --{{ user.roles|join(', ') }}--
+        </div>
+        {% if not user.isAdmin %}
+            {% if user.isBanned %}
+                <a href="{{ path('admin_unbanUser', {'userId': user.id}) }}">
+                    <button class="btn btn-primary btn-lg btn-block">Unban the user</button></a>
+            {% else %}
+                <a href="{{ path('admin_banUser', {'userId': user.id}) }}">
+                    <button class="btn btn-primary btn-lg btn-block">Ban the user</button></a>
+            {% endif %}
+        {% endif %}
+        <hr class="my-4">
+        </div>
+
+        <hr>
+        </div>
+    {% endfor %}
+{% endblock %}
+

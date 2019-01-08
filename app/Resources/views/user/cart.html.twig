@@ -7,6 +7,7 @@
         <button type="button" class="close" data-dismiss="alert"></button>
         <strong>Oh snap! Chosen quantity is bigger than available quantity or not a valid number!</strong>
     </div>
+    <div class="jumbotron">
     <h2 style="text-align: center">My Shopping Cart</h2>
     <hr/><h3 style="text-align: center">My money:</h3>
     <h3 class="text-success" style="text-align: center"> {{ app.user.money }} лв.</h3>
@@ -77,6 +78,7 @@
         </form>
 
     {% endif %}
+    </div>
     <script>
         function checkQuantity(el) {
             let tr = el.parentNode.parentNode;
