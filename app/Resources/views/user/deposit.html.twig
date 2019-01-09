@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <div class="alert alert-dismissible alert-success text-center" style="display: none" id="successBox"></div>
+    <div class="alert alert-dismissible alert-danger text-center" style="display: none" id="errorBox"></div>
+    <hr>
+    <div class="widget center">
+        <div class="blur"></div>
+        <div class="text center">
+            <h1 class="display-3">Here you can make a deposit.</h1>
+            {# @var user \AppBundle\Entity\User #}
+            <hr>
+            <p class="lead">My balance:</p>
+            <hr class="my-4">
+            <p class="lead" id="userMoney">{{ user.money}}</p>
+            <hr class="my-4">
+            <div class="modal fade" id="modalForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header text-center">
+                            <h4 class="modal-title w-100 font-weight-bold">Make deposit</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body mx-3">
+                            <div class="md-form mb-5">
+                                <i class="fa fa-envelope prefix grey-text"></i>
+                                <label data-error="wrong" data-success="right" for="amount">Amount</label>
+                                <input type="number" id="amount" class="form-control validate"/>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-center">
+                            <button id="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="lead" id="deposit" style="text-align: center">
+                <a href="" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modalForm"
+                   role="button">Deposit</a>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        $('#submit').on('click', function (event) {
+            let sum = $('#amount').val();
+            let amount = {amount: sum};
+            $.ajax({
+                method: 'PATCH',
+                url: '/api/users/deposit',
+                data: {amount}
+            }).then(function (sum) {
+                let userMoney = $('#userMoney');
+                let oldAmount = parseFloat(userMoney.text());
+                let newSum=oldAmount + parseFloat(sum);
+                userMoney.text(newSum.toFixed(2));
+                $('#amount').val('');
+                $('#modalForm').modal('toggle');
+                showMessages(sum)
+            }).catch(function (error) {
+                showError(error);
+            });
+        });
+
+        function showMessages(sum) {
+            let successBox = $('#successBox');
+            successBox.empty();
+
+            successBox.text(`Well done! You just added ${sum} lv. to your account balance.`);
+            successBox.show();
+            setTimeout(function () {
+                $('#successBox').fadeOut()
+            }, 3000);
+        }
+
+        function showError(sum) {
+            $('#modalForm').modal('toggle');
+            let errorBox = $('#errorBox');
+            errorBox.empty();
+            errorBox.text(`Error: Enter a valid number!`);
+            errorBox.show();
+            $('#amount').val('');
+            setTimeout(function () {
+                $('#errorBox').fadeOut()
+            }, 3000);
+        }
+    </script>
+{% endblock %}
+
+{% block footer %}
+    <div class="footer">
+        {{ parent() }}
+    </div>
+{% endblock %}
+

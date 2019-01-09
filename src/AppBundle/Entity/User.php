@@ -509,6 +509,7 @@ class User implements UserInterface
         return $this->purchases;
     }
 
+
     /**
      * @param Purchase $purchase
      * @return User

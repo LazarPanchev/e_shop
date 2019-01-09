@@ -24,23 +24,6 @@ class CartRepository extends EntityRepository
             new Mapping\ClassMetadata(Cart::class));
     }
 
-//    /**
-//     * @param $userId
-//     * @return mixed
-//     * @throws \Doctrine\ORM\NoResultException
-//     * @throws \Doctrine\ORM\NonUniqueResultException
-//     */
-//    public function findCartByUserId($userId){
-//        return $this->createQueryBuilder('cart')
-//            ->select('cart')
-//            ->from('AppBundle:Cart','c')
-//            ->leftJoin('cart.tyres','tyres')
-//            ->where('cart.userId = :id')
-//            ->setParameter(':id',$userId)
-//            ->getQuery()
-//            ->getSingleResult();
-//    }
-
     /**
      * @param $cart
      * @return int
@@ -53,25 +36,8 @@ class CartRepository extends EntityRepository
         return $cart->getId();
     }
 
-//    /**
-//     * @param Cart $cart
-//     * @throws \Doctrine\ORM\OptimisticLockException
-//     */
-//    public function remove(Cart $cart){
-//        $this->_em->remove($cart);
-//        $this->_em->flush();
-//    }
 
     public function removeTyreFromCart($tyreId,$cartId){
-//        $query=$this->createQueryBuilder('c')
-//            ->from('AppBundle:Cart','cart')
-//            ->innerJoin('c.tyres', 'tyres', 'WITH', 'c.id = :cartId')
-//            ->where('c.id = :cartId')
-//            ->setParameter('cartId',$cartId)
-//            ->getQuery()
-//            ->getResult();
-//        dump($query);
-//        exit();
         $query=$this->createQueryBuilder('c')
             ->select('c')
             ->from('AppBundle:Cart','cart')

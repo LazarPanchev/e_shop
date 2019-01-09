@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Purchase;
 use AppBundle\Service\Purchase\PurchaseServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,7 +30,18 @@ class PurchaseController extends Controller
     public function showAllAction()
     {
         $purchases = $this->purchaseService->findAll();
+        $totalSum=0;
+        /** @var Purchase $purchase */
+        foreach ($purchases as $purchase){
+            $totalSum+=$purchase->getTotalSum();
+        }
+        $totalTyres=0;
+        foreach ($purchases as $purchase){
+            $totalTyres+=$purchase->getTotalTyres();
+        }
         return $this->render('admin/purchases.html.twig',
-            ['purchases'=>$purchases]);
+            ['purchases'=>$purchases,
+                'totalSum'=>$totalSum,
+                'totalTyres'=>$totalTyres]);
     }
 }

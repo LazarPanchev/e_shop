@@ -19,6 +19,10 @@ class SearchService implements SearchServiceInterface
      */
     private $searchRepository;
 
+    /**
+     * SearchService constructor.
+     * @param SearchRepository $searchRepository
+     */
     public function __construct(SearchRepository $searchRepository)
     {
         $this->searchRepository=$searchRepository;
@@ -35,7 +39,7 @@ class SearchService implements SearchServiceInterface
                 if($diameter===''){
                     return $this->searchRepository->findAll();
                 }
-                return $this->searchRepository->findBy(['width'=>$width],$sortingMethod);
+                return $this->searchRepository->findBy(['diameter'=>$diameter],$sortingMethod);
             }
             if($diameter===''){
                 return $this->searchRepository->findBy(['height'=>$height],$sortingMethod);
@@ -57,11 +61,47 @@ class SearchService implements SearchServiceInterface
         return $this->searchRepository->findBy(['width'=>$width,'height'=>$height,'diameter'=>$diameter],$sortingMethod);
     }
 
+    /**
+     * @param $request
+     * @return array
+     */
     public function searchByBrand($request)
     {
         $searchedWord=$request->query->get('searchedWord');
         return $this
             ->searchRepository
             ->findByBrand($searchedWord);
+    }
+
+    /**
+     * @param $brand
+     * @return array
+     */
+    public function quickSearchByBrand($brand)
+    {
+       $tyres=$this->searchRepository->quickSearchByBrand($brand);
+       return $tyres;
+    }
+
+    /**
+     * @param $width
+     * @param $height
+     * @param $diameter
+     * @return array
+     */
+    public function quickSearchBySize($width, $height, $diameter)
+    {
+        $tyres=$this->searchRepository->quickSearchBySize($width, $height, $diameter);
+        return $tyres;
+    }
+
+    /**
+     * @param $category
+     * @return array
+     */
+    public function quickSearchByCategory($category)
+    {
+        $tyres=$this->searchRepository->quickSearchByCategory($category);
+        return $tyres;
     }
 }

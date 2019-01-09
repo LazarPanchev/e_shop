@@ -17,8 +17,6 @@ interface UserServiceInterface
 //    public function register($username, $password, $birthPlace);
     public function register(User $user, string $encodePassword);
 
-    public function findValidUsers();
-
     public function findByEmail(string $email);
 
     public function findAll();

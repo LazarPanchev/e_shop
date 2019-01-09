@@ -2,6 +2,8 @@
 
 {% block main %}
     <h3 style="text-align: center; color:lightsalmon ">All finished purchases</h3>
+    <h3 style="text-align: center; color:lightsalmon ">Total sum of all purchases: <span style="color: red">{{ totalSum|number_format(2) }}</span>  лв.</h3>
+    <h3 style="text-align: center; color:lightsalmon ">Total tyres: <span style="color: red">{{ totalTyres }}</span></h3>
     {# @var purchase \AppBundle\Entity\Purchase #}
     {% for purchase in purchases %}
         <div class="jumbotron">
@@ -19,7 +21,7 @@
             </div>
             <div class="text-danger"> Purchase Description</div>
             <div>
-                {{ purchase.deliveryAddress }}
+                {{ purchase.description }}
             </div>
             <div class="text-danger"> Purchase made on:</div>
             <div>

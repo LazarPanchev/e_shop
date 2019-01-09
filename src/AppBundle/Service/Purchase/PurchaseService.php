@@ -9,8 +9,10 @@
 namespace AppBundle\Service\Purchase;
 
 
+use AppBundle\Entity\Cart;
 use AppBundle\Entity\PurchasesDetails;
 use AppBundle\Entity\Tyre;
+use AppBundle\Repository\CartRepository;
 use AppBundle\Repository\PurchaseRepository;
 use AppBundle\Repository\PurchasesDetailsRepository;
 use AppBundle\Repository\TyreRepository;
@@ -32,13 +34,20 @@ class PurchaseService implements PurchaseServiceInterface
      */
     private $tyreRepository;
 
+    /**
+     * @var CartRepository
+     */
+    private $cartRepository;
+
     public function __construct(PurchasesDetailsRepository $purchasesDetailsRepository,
                                 PurchaseRepository $purchaseRepository,
-                                TyreRepository $tyreRepository)
+                                TyreRepository $tyreRepository,
+                                CartRepository $cartRepository)
     {
         $this->purchasesDetailsRepository = $purchasesDetailsRepository;
         $this->purchaseRepository = $purchaseRepository;
-        $this->tyreRepository=$tyreRepository;
+        $this->tyreRepository = $tyreRepository;
+        $this->cartRepository=$cartRepository;
     }
 
     /**
@@ -66,14 +75,20 @@ class PurchaseService implements PurchaseServiceInterface
         return $this->purchaseRepository->save($purchase);
     }
 
-    public function findPurchaseDetailByTyreId($tyreId)
+    public function findPurchaseDetailByTyreId($tyreId,$userId)
     {
         try {
-            $tyre = $this->purchasesDetailsRepository->findByTyreId($tyreId);
+            /** @var PurchasesDetails $purchaseDetail */
+            $purchaseDetail = $this->purchasesDetailsRepository->findByTyreId($tyreId);
+            /** @var Cart[] $cart */
+            $cart=$this->cartRepository->findBy(['user'=>$userId]);
+            if ($cart[0]->getId() !== $purchaseDetail->getCart()->getId() ){
+                return null;
+            }
         } catch (\Exception $exception) {
             return null;
         }
-        return $tyre;
+        return $purchaseDetail;
     }
 
     public function findPurchaseDetailById($purchaseDetailsId)
@@ -133,11 +148,11 @@ class PurchaseService implements PurchaseServiceInterface
             $currentPurchase->setStatus(1);
             $this->savePurchaseDetails($currentPurchase);
             /** @var PurchasesDetails $purchaseDetails */
-            $tyreId=$currentPurchase->getTyre()->getId();
+            $tyreId = $currentPurchase->getTyre()->getId();
             /** @var Tyre $tyre */
-            $tyre=$this->tyreRepository->find($tyreId);
-            $oldQuantity=intval($tyre->getQuantity());
-            $tyre->setQuantity($oldQuantity-$quantity);
+            $tyre = $this->tyreRepository->find($tyreId);
+            $oldQuantity = intval($tyre->getQuantity());
+            $tyre->setQuantity($oldQuantity - $quantity);
             $this->tyreRepository->save($tyre);
         }
         $userMoney = floatval($currentUser->getMoney());
@@ -148,5 +163,10 @@ class PurchaseService implements PurchaseServiceInterface
     public function findAll()
     {
         return $this->purchaseRepository->findAllPurchases();
+    }
+
+    public function findPurchaseByUser($userId)
+    {
+        return $this->purchaseRepository->findBy(['userId' => $userId]);
     }
 }

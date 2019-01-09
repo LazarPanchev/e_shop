@@ -39,7 +39,6 @@ class CommentRepository extends EntityRepository
 
     public function findByIdASC(int $tyreId)
     {
-//        ['tyre'=>$tyreId]
         $query = $this->_em
             ->createQueryBuilder()
             ->select('comment')

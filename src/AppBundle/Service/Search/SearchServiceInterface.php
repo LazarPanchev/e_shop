@@ -16,4 +16,10 @@ interface SearchServiceInterface
     public function searchBySize($request);
 
     public function searchByBrand($request);
+
+    public function quickSearchByBrand($brand);
+
+    public function quickSearchBySize($width, $height, $diameter);
+
+    public function quickSearchByCategory($category);
 }

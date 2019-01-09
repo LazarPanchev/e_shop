@@ -7,7 +7,7 @@
     <div class="jumbotron" style="margin-top: 20px">
         <div class="mask rgba-gradient align-items-center">
             <div class="container">
-                <h1 style="text-align: center; font-size: 60px; color: yellowgreen">Tyres Place</h1>
+                <h1 style="text-align: center; font-size: 60px; color: yellowgreen">Home Page</h1>
                 <div class="row mt-5">
                     <div class="col-md-6 mb-5 mt-md-0 mt-5 white-text text-center text-md-left">
                         <h3 class="h1-responsive font-weight-bold wow fadeInLeft" data-wow-delay="0.3s"
@@ -25,7 +25,7 @@
                         </div>
                         <h6 class="mb-3 wow fadeInLeft" data-wow-delay="0.3s">Welcome to our Tyres Shop. Here you can sell or buy tyres. Search tyres
                         by size or brand.</h6>
-                        <a href="{{ path('about_page') }}" class="btn btn-outline-white wow fadeInLeft" data-wow-delay="0.3s">Learn more</a>
+                        <a href="{{ path('about_page') }}" class="btn btn-outline-white wow fadeInLeft" data-wow-delay="0.3s"><button class="btn-success">Learn more</button></a>
                     </div>
 
                     <!--Grid column-->
@@ -46,12 +46,10 @@
                                 </p>
                             </div>
                             <div class="nav-item">
-                                <p><a class="btn btn-primary btn-lg" href="{{ path('tyres_view_all') }}" role="button">View
-                                        all tyres&raquo;</a></p>
+                                <p><a class="btn btn-primary btn-lg" href="{{ path('tyres_mainPage') }}" role="button">Auto Tyres&raquo;</a></p>
                             </div>
                             <div class="nav-item">
-                                <p><a class="btn btn-primary btn-lg" href="{{ path('tyres_search') }}" role="button">SearchType
-                                        Tyres&raquo;</a></p>
+                                <p><a class="btn btn-primary btn-lg" href="{{ path('cart_show') }}" role="button">Go to Shopping Cart&raquo;</a></p>
                             </div>
                         {% else %}
                             <ul class="nav flex-column">
@@ -64,10 +62,5 @@
         </div>
     </div>
 </header>
-{% endblock %}
-{% block footer %}
-    <div class="footer">
-        {{ parent() }}
-    </div>
 {% endblock %}
 

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -12,8 +13,14 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
+        /** @var User $currentUser */
         $currentUser=$this
             ->getUser();
+
+        if($currentUser && $currentUser->getIsBanned()===true){
+//            $this->addFlash('error', 'Access forbidden. Please contact the administration.');
+            return $this->redirect($this->generateUrl('security_logout'));
+        }
         return $this->render('default/index.html.twig',
             ['user'=>$currentUser]);
     }

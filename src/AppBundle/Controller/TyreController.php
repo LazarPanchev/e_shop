@@ -44,7 +44,17 @@ class TyreController extends Controller
     }
 
     /**
-     * @Route("/", name="tyres_view_all")
+     * @Route("/", name="tyres_mainPage")
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function mainPageAction()
+    {
+
+        return $this->render('tyre/main.html.twig');
+    }
+
+    /**
+     * @Route("/viewAll", name="tyres_view_all")
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -246,5 +256,4 @@ class TyreController extends Controller
             ['pagination' => $pagination]);
 
     }
-
 }

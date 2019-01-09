@@ -81,11 +81,6 @@ class UserService implements UserServiceInterface
         $this->cartRepository->save($cart);
     }
 
-    public function findValidUsers()
-    {
-        // TODO: Implement findValidUsers() method.
-    }
-
     public function findByEmail(string $email)
     {
         return $this->userRepository->findOneBy(['email' => $email]);
@@ -126,4 +121,5 @@ class UserService implements UserServiceInterface
     {
         return $this->userRepository->save($user);
     }
+
 }

@@ -19,7 +19,7 @@ interface PurchaseServiceInterface
 
     public function savePurchase($purchase);
 
-    public function findPurchaseDetailByTyreId($tyreId);
+    public function findPurchaseDetailByTyreId($tyreId, $userId);
 
     public function findPurchaseDetailById($purchaseDetailsId);
 
@@ -30,5 +30,7 @@ interface PurchaseServiceInterface
     public function finalizePurchase($purchaseDetails,$purchase,$quantitiesArr, $currentUser,$totalPurchaseSum);
 
     public function findAll();
+
+    public function findPurchaseByUser($userId);
 
 }

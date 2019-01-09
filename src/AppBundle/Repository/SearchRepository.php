@@ -26,6 +26,10 @@ class SearchRepository extends EntityRepository
             new Mapping\ClassMetadata(Tyre::class));
     }
 
+    /**
+     * @param $searchedWord
+     * @return array
+     */
     public function findByBrand($searchedWord)
     {
         $query = $this->createQueryBuilder('t')
@@ -41,21 +45,58 @@ class SearchRepository extends EntityRepository
 
     }
 
+    /**
+     * @param $brand
+     * @return array
+     */
+    public function quickSearchByBrand($brand){
+        $query = $this->createQueryBuilder('t')
+            ->select('tyre')
+            ->from('AppBundle:Tyre', 'tyre')
+            ->where('tyre.make = :brand')
+            ->setParameter('brand', $brand)
+            ->orderBy('tyre.diameter', 'ASC')
+            ->addOrderBy('tyre.width', 'ASC')
+            ->getQuery();
 
-//    public function findBySize($width,$height,$diameter){
-//        $query = $this->createQueryBuilder('t')
-//            ->select('tyre')
-//            ->from('AppBundle:Tyre', 'tyre')
-//            ->andWhere('tyre.width = :width')
-//            ->setParameter('width',$width)
-//            ->andWhere('tyre.height = :height')
-//            ->setParameter('height',$height)
-//            ->andWhere('tyre.diameter = :diameter')
-//            ->setParameter('diameter',$diameter)
-//           // ->orderBy('comment.id', 'DESC')
-//            ->getQuery();
-//
-//        return $query->getResult();
-//
-//    }
+        return $query->getResult();
+    }
+
+    /**
+     * @param $width
+     * @param $height
+     * @param $diameter
+     * @return array
+     */
+    public function quickSearchBySize($width, $height, $diameter)
+    {
+        $query = $this->createQueryBuilder('t')
+            ->select('tyre')
+            ->from('AppBundle:Tyre', 'tyre')
+            ->where('tyre.width = :width')
+            ->setParameter('width', $width)
+            ->andWhere('tyre.height = :height')
+            ->setParameter('height', $height)
+            ->andWhere('tyre.diameter = :diameter')
+            ->setParameter('diameter', $diameter)
+            ->orderBy('tyre.diameter', 'ASC')
+            ->addOrderBy('tyre.width', 'ASC')
+            ->getQuery();
+
+        return $query->getResult();
+    }
+
+    public function quickSearchByCategory($category)
+    {
+        $query = $this->createQueryBuilder('t')
+            ->select('tyre')
+            ->from('AppBundle:Tyre', 'tyre')
+            ->where('tyre.category = :category')
+            ->setParameter('category', $category)
+            ->orderBy('tyre.diameter', 'ASC')
+            ->addOrderBy('tyre.width', 'ASC')
+            ->getQuery();
+
+        return $query->getResult();
+    }
 }

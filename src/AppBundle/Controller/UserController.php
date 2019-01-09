@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
+use AppBundle\Service\Purchase\PurchaseServiceInterface;
 use AppBundle\Service\User\UserServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -22,9 +23,16 @@ class UserController extends Controller
      */
     private $userService;
 
-    public function __construct(UserServiceInterface $userService)
+    /**
+     * @var PurchaseServiceInterface
+     */
+    private $purchaseService;
+
+
+    public function __construct(UserServiceInterface $userService, PurchaseServiceInterface $purchaseService)
     {
         $this->userService = $userService;
+        $this->purchaseService=$purchaseService;
     }
 
     /**
@@ -39,7 +47,7 @@ class UserController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            if($form->isValid()){
+            if ($form->isValid()) {
                 $email = $user->getEmail();
                 $desiredUser = $this->userService->findByEmail($email);
                 if (null != $desiredUser) {
@@ -47,7 +55,7 @@ class UserController extends Controller
                     $user->setEmail('');
                     return $this->render('user/register.html.twig',
                         ['form' => $form->createView(),
-                            'user'=>$user]);
+                            'user' => $user]);
                 }
                 $encodePassword = $this->get('security.password_encoder')
                     ->encodePassword($user, $user->getPassword());
@@ -59,12 +67,12 @@ class UserController extends Controller
             }
             return $this->render('user/register.html.twig',
                 ['form' => $form->createView(),
-                    'user'=>$user]);
+                    'user' => $user]);
 
         }
         return $this->render('user/register.html.twig',
             ['form' => $form->createView(),
-                'user'=>$user]);
+                'user' => $user]);
 
     }
 
@@ -74,17 +82,39 @@ class UserController extends Controller
      * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function profileAction($id){
-        /** @var User  $currentUser */
-        $currentUser=$this
+    public function profileAction($id)
+    {
+        /** @var User $currentUser */
+        $currentUser = $this
             ->userService
             ->findById($id);
         if ($currentUser === null ||
-            $currentUser->getId() !== $this->getUser()->getId() ) {
+            $currentUser->getId() !== $this->getUser()->getId()) {
+            return $this->redirectToRoute('homepage');
+        }
+        $purchases= $this->purchaseService->findPurchaseByUser($currentUser->getId());
+        return $this->render('user/profile.html.twig',
+            ['user' => $currentUser,
+                'purchases'=>$purchases]);
+    }
+
+    /**
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @Route("/deposit/{id}", name="users_deposit")
+     * @param $id
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function depositAction($id)
+    {
+        /** @var User $currentUser */
+        $currentUser = $this
+            ->userService
+            ->findById($id);
+        if ($currentUser === null || $currentUser->getId() !== $this->getUser()->getId()) {
             return $this->redirectToRoute('homepage');
         }
 
-        return $this->render('user/profile.html.twig',
-            ['user'=>$currentUser]);
+        return $this->render('user/deposit.html.twig',
+            ['user' => $currentUser]);
     }
 }

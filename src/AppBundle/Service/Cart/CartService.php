@@ -64,12 +64,10 @@ class CartService implements CartServiceInterface
 
     public function findCartByUserId($userId)
     {
-//        $cart = $this->cartRepository->findBy(['user'=>$userId]);
         $cart = $this->cartRepository->findCartWithPurchasesDetails($userId);
         if(count($cart) === 0){
             return null;
         }
         return $cart[0];
-
     }
 }

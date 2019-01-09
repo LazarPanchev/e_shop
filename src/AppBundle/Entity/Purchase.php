@@ -185,5 +185,29 @@ class Purchase
         return $this;
     }
 
+    /**
+     * @return int|string
+     */
+    public function getTotalSum(){
+        $totalSum=0;
+        foreach ($this->purchasesDetails as $purchasesDetail){
+            $totalSum+=$purchasesDetail->getPrice();
+        }
+        return $totalSum;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTotalTyres(){
+        $totalTyres=0;
+        foreach ($this->purchasesDetails as $purchasesDetail){
+            $totalTyres+=$purchasesDetail->getQuantity();
+        }
+        return $totalTyres;
+    }
+
+
+
 }
 

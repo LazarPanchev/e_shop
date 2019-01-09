@@ -2,9 +2,9 @@ INSERT INTO `e_shop_exam`.`roles` (`name`) VALUES ('ROLE_ADMIN');
 INSERT INTO `e_shop_exam`.`roles` (`name`) VALUES ('ROLE_EDITOR');
 INSERT INTO `e_shop_exam`.`roles` (`name`) VALUES ('ROLE_USER');
 
-INSERT INTO `e_shop_exam`.`categories` (`name`) VALUES ('Summer tyre');
-INSERT INTO `e_shop_exam`.`categories` (`name`) VALUES ('Winter tyre');
-INSERT INTO `e_shop_exam`.`categories` (`name`) VALUES ('All seasons tyre');
+INSERT INTO `e_shop_exam`.`categories` (`name`, `description`) VALUES ('Summer tyre', 'Summer tyres provide better all-round performance in the warmer months. They have a relatively hard compound which softens in milder temperatures to be able to adapt to dry as well as wet roads. Summer tyres have fewer sipes than winter tyres, but have specially designed tread bars to minimise aquaplaning. These provide more grip both longitudinally and laterally in warm temperatures. ensuring lots of grip on wet and dry roads');
+INSERT INTO `e_shop_exam`.`categories` (`name`, `description`) VALUES ('Winter tyre','Winter tyres have a higher natural rubber content which keeps them supple in the cold. The softer they are, the more the tyre is able to interlock with the road surface, improving grip and handling. Unlike summer tyres, which harden quickly in cold temperatures, winter tyres perform best in temperatures below +7 degrees C.');
+INSERT INTO `e_shop_exam`.`categories` (`name`,`description`) VALUES ('All seasons tyre','The tread pattern of an All Season tyre, on the contrary, is the result of a targeted functional balance. Efficient at high and low temperatures, on sunny days or in rainy days, on wet and dry roads alike, the tread pattern is designed to perform well in all conditions, although never at the level of summer and winter tyres in extreme conditions in the respective seasons, precisely because of its versatility');
 
 
 INSERT INTO `e_shop_exam`.`tyres` (`seller_id`, `category_id`, `make`, `model`, `width`, `height`, `diameter`, `price`, `quantity`, `speedIndex`, `loadIndex`, `createDate`, `image`, `view_count`)

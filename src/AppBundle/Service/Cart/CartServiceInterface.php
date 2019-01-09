@@ -13,8 +13,6 @@ use AppBundle\Entity\Cart;
 
 interface CartServiceInterface
 {
-    public function findCartWithTyresByUserId(int $userId);
-
     public function findCartByCartId($cartId);
 
     public function findCartByUserId($userId);

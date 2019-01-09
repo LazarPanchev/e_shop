@@ -32,6 +32,10 @@
             <a href="{{ path('cart_add', {'tyreId': tyre.id}) }}">
                 <button type="button" class="btn btn-success btn-lg btn-block"> Add To Cart</button></a>
         {% endif %}
+        {% if app.User() and app.getUser().isAdmin() and not app.getUser().isSeller(tyre) %}
+            <a href="{{ path('cart_add', {'tyreId': tyre.id}) }}">
+                <button type="button" class="btn btn-success btn-lg btn-block"> Add To Cart</button></a>
+        {% endif %}
         <hr>
     </div>
     <div class="form-group">

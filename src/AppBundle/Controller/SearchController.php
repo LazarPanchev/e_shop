@@ -18,6 +18,10 @@ class SearchController extends Controller
      */
     private $searchService;
 
+    /**
+     * SearchController constructor.
+     * @param SearchServiceInterface $searchService
+     */
     public function __construct(SearchServiceInterface $searchService)
     {
         $this->searchService = $searchService;
@@ -65,6 +69,7 @@ class SearchController extends Controller
         $tyres = $this
             ->searchService
             ->searchBySize($request);
+
         return $this->handlePaginationProcess($tyres,$request);
     }
 
@@ -77,9 +82,53 @@ class SearchController extends Controller
         $tyres = $this
             ->searchService
             ->searchByBrand($request);
-        return $this->handlePaginationProcess($tyres, $request);
 
+        return $this->handlePaginationProcess($tyres, $request);
     }
+
+    /**
+     * @Route("tyres/search/quick/brand/{brand}", name="tyres_search_quick_brand")
+     * @param $brand
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function quickSearchByBrand($brand, Request $request){
+        $tyres= $this
+            ->searchService
+            ->quickSearchByBrand($brand);
+
+        return $this->handlePaginationProcess($tyres, $request);
+    }
+
+    /**
+     * @Route("tyres/search/quick/category/{category}", name="tyres_search_quick_category")
+     * @param $category
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function quickSearchByCategory($category, Request $request){
+        $tyres= $this
+            ->searchService
+            ->quickSearchByCategory($category);
+
+        return $this->handlePaginationProcess($tyres, $request);
+    }
+
+    /**
+     * @Route("tyres/search/quick/size/{width}/{height}/{diameter}", name="tyres_search_quick_size")
+     * @param $width
+     * @param $height
+     * @param $diameter
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function quickSearchBySize($width,$height,$diameter, Request $request){
+        $tyres= $this
+            ->searchService
+            ->quickSearchBySize($width,$height,$diameter);
+
+        return $this->handlePaginationProcess($tyres, $request);
+    }
+
 
     /**]
      * @return \Symfony\Component\Form\FormInterface
@@ -115,4 +164,6 @@ class SearchController extends Controller
         return $this->render("tyre/all.html.twig",
             ['pagination' => $pagination]);
     }
+
+
 }

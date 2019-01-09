@@ -1,0 +1,72 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+<html lang="en">
+<body>
+<header>
+    <div class="jumbotron" style="margin-top: 20px">
+        <h1 style="text-align: center; font-size: 60px; color: yellowgreen">Choose tyres</h1>
+        <div class="mask rgba-gradient align-items-center">
+            <div class="container">
+                <div class="row mt-5">
+                    <div class="col-md-6 mb-5 mt-md-0 mt-5 white-text text-center text-md-left">
+                        <h3 class="h1-responsive font-weight-bold wow fadeInLeft" data-wow-delay="0.3s"
+                            style="color: yellow">View All Tyres</h3>
+                        <div class="nav-item">
+                            <p><a class="btn btn-primary btn-lg" href="{{ path('tyres_view_all') }}" role="button">View All&raquo;</a></p>
+                        </div>
+                        <hr class="hr-light wow fadeInLeft" data-wow-delay="0.3s">
+                        <h3 class="h1-responsive font-weight-bold wow fadeInLeft" data-wow-delay="0.3s"
+                            style="color: yellow">Search tyres by Size </h3>
+                        <div class="nav-item">
+                            <p><a class="btn btn-primary btn-lg" href="{{ path('tyres_search') }}" role="button">Custom search By Size&raquo;</a></p>
+                        </div>
+                        <hr class="hr-light wow fadeInLeft" data-wow-delay="0.3s">
+                        <h3 class="h1-responsive font-weight-bold wow fadeInLeft" data-wow-delay="0.3s"
+                            style="color: yellow">View tyres by Category </h3>
+                        <div class="nav-item">
+                            <p><a class="btn btn-primary btn-lg" href="{{ path('tyres_search_quick_category', {'category': '2'}) }}" role="button">Winter tyres&raquo;</a></p>
+                        </div>
+                        <div class="nav-item">
+                            <p><a class="btn btn-primary btn-lg" href="{{ path('tyres_search_quick_category', {'category': '1'}) }}" role="button">Summer tyres&raquo;</a></p>
+                        </div>
+                        <div class="nav-item">
+                            <p><a class="btn btn-primary btn-lg" href="{{ path('tyres_search_quick_category', {'category': '3'}) }}" role="button">All seasons tyres&raquo;</a></p>
+                        </div>
+                        <hr class="hr-light wow fadeInLeft" data-wow-delay="0.3s">
+                    </div>
+
+                    <div class="col-md-6 col-xl-5 mb-4">
+                            <h2  style="color: yellow">Popular tyres</h2>
+                        <hr class="hr-light wow fadeInLeft" data-wow-delay="0.3s">
+                            <div class="nav-item">
+                                <p><a class="btn btn-primary btn-lg"
+                                      href="{{ path('tyres_search_quick_brand', {'brand': 'Michelin'}) }}" role="button">Michelin&raquo;</a></p>
+                            </div>
+                            <div class="nav-item">
+                                <p><a class="btn btn-primary btn-lg" href="{{ path('tyres_search_quick_brand', {'brand': 'Barum'}) }}" role="button">Barum&raquo;</a></p>
+                            </div>
+                            <div class="nav-item">
+                                <p><a class="btn btn-primary btn-lg" href="{{ path('tyres_search_quick_brand', {'brand': 'Semperit'}) }}" role="button">Semperit&raquo;</a>
+                                </p>
+                            </div>
+                            <div class="nav-item">
+                                <p><a class="btn btn-primary btn-lg" href="{{ path('tyres_search_quick_size', {'width': '185', 'height': '65', 'diameter': '14'}) }}" role="button">185/65/14&raquo;</a></p>
+                            </div>
+                            <div class="nav-item">
+                                <p><a class="btn btn-primary btn-lg" href="{{ path('tyres_search_quick_size', {'width': '195', 'height': '65', 'diameter': '15'}) }}" role="button">195/65/15&raquo;</a></p>
+                            </div>
+                        <div class="nav-item">
+                            <p><a class="btn btn-primary btn-lg" href="{{ path('tyres_search_quick_size', {'width': '205', 'height': '55', 'diameter': '16'}) }}" role="button">205/55/16&raquo;</a></p>
+                        </div>
+                            <ul class="nav flex-column">
+                            </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</header>
+{% endblock %}
+

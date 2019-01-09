@@ -1,98 +1,67 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
-    <div class="alert alert-dismissible alert-success text-center" style="display: none" id="successBox"></div>
-    <div class="alert alert-dismissible alert-danger text-center" style="display: none" id="errorBox"></div>
-    <hr>
-    <div class="widget center">
-        <div class="blur"></div>
-        <div class="text center">
-            <h1 class="display-3">My Profile</h1>
-            {# @var user \AppBundle\Entity\User #}
-            <hr>
-            <p class="lead">{{ user.fullName }}</p>
-            <hr class="my-4">
-            <p class="lead" id="userMoney">{{ user.money|number_format(2) }} lv.</p>
-            <hr class="my-4">
-            <p>Here you can make a deposit.</p>
-
-            <div class="modal fade" id="modalForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-                 aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header text-center">
-                            <h4 class="modal-title w-100 font-weight-bold">Make deposit</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body mx-3">
-                            <div class="md-form mb-5">
-                                <i class="fa fa-envelope prefix grey-text"></i>
-                                <label data-error="wrong" data-success="right" for="amount">Amount</label>
-                                <input type="number" id="amount" class="form-control validate"/>
-                            </div>
-                        </div>
-                        <div class="modal-footer d-flex justify-content-center">
-                            <button id="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="lead" id="deposit" style="text-align: center">
-                <a href="" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modalForm"
-                   role="button">Deposit</a>
-            </div>
-        </div>
+<div class="jumbotron">
+    <h1 style="text-align: center; color: yellow">My Profile</h1>
+    <hr/>
+    <h3 style="text-align: center">Name:</h3>
+    <h3 class="text-success" style="text-align: center"> {{ user.fullName }}</h3>
+    <hr/>
+    <h3 style="text-align: center">Email:</h3>
+    <h3 class="text-success" style="text-align: center"> {{ user.email }}</h3>
+    <hr/>
+    <h3 style="text-align: center">Address:</h3>
+    <h3 class="text-success" style="text-align: center"> {{ user.address }}</h3>
+    <hr/>
+    <h3 style="text-align: center">Phone:</h3>
+    <h3 class="text-success" style="text-align: center"> {{ user.phone }}</h3>
+    <hr/>
+    <h3 style="text-align: center">My money:</h3>
+    <h3 class="text-success" style="text-align: center"> {{ user.money }} лв.</h3>
+    <hr/>
+    <div class="container" style="text-align: center">
+        <a href="{{ path('users_deposit',{'id':app.user.id}) }}">
+            <button class="btn-primary">Deposit money</button>
+        </a>
     </div>
-    <script>
-        $('#submit').on('click', function (event) {
-            let sum = $('#amount').val();
-            let amount = {amount: sum};
-            $.ajax({
-                method: 'PATCH',
-                url: '/api/users/deposit',
-                data: {amount}
-            }).then(function (sum) {
-                let userMoney = $('#userMoney');
-                let oldAmount = parseFloat(userMoney.text());
-                userMoney.text((oldAmount + parseFloat(sum)).toFixed(2) + ' lv.');
-                $('#amount').val('');
-                $('#modalForm').modal('toggle');
-                showMessages(sum)
-            }).catch(function (error) {
-                showError(error);
-            });
-        });
-
-        function showMessages(sum) {
-            let successBox = $('#successBox');
-            successBox.empty();
-
-            successBox.text(`Well done! You just added ${sum} lv. to your account balance.`);
-            successBox.show();
-            setTimeout(function () {
-                $('#successBox').fadeOut()
-            }, 3000);
-        }
-
-        function showError(sum) {
-            $('#modalForm').modal('toggle');
-            let errorBox = $('#errorBox');
-            errorBox.empty();
-            errorBox.text(`Error: Enter a valid number!`);
-            errorBox.show();
-            $('#amount').val('');
-            setTimeout(function () {
-                $('#errorBox').fadeOut()
-            }, 3000);
-        }
-    </script>
-{% endblock %}
-
-{% block footer %}
-    <div class="footer">
-        {{ parent() }}
+    <hr/>
+    <h1 style="text-align: center; color: yellow">My Purchases</h1>
+    {% if purchases is empty %}
+    <div class="text-danger" style="text-align: center"><h2>Not purchases yet!</h2>
     </div>
+    {% else %}
+    <table class="table table-primary" border="2" style="background-color: greenyellow">
+        <thead class="thead-dark">
+        <tr>
+            <th class="text-secondary" style="text-align: center">Number:</th>
+            <th class="text-secondary" style="text-align: center">Purchase Date:</th>
+            <th class="text-secondary" style="text-align: center">Purchase Total Sum:</th>
+            <th class="text-secondary" style="text-align: center">Purchase Address:</th>
+            <th class="text-secondary" style="text-align: center">Number Tyres</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for purchase in purchases %}
+        <tr>
+            <td>{{ loop.index }}.</td>
+            {# @var purchase \AppBundle\Entity\Purchase #}
+            <td>
+                <span style="color: darkmagenta">{{ purchase.createDate|date('F jS \\a\\t g:ia', 'Europe/Sofia') }}</span>
+            </td>
+            <td>
+                <span style="color: darkmagenta">{{ purchase.totalSum }} лв.</span>
+            </td>
+            <td>
+                <span style="color: darkmagenta">{{ purchase.deliveryAddress }}</span>
+            </td>
+            <td>
+                <span style="color: darkmagenta">{{ purchase.totalTyres }}</span>
+            </td>
+        </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+    {% endif %}
+</div>
 {% endblock %}
 
