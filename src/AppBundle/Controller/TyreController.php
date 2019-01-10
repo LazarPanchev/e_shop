@@ -128,14 +128,17 @@ class TyreController extends Controller
             $this
                 ->tyreService
                 ->create($tyre, $fileName);
-            $role = $this
+
+            if(!in_array('ROLE_EDITOR', $currentUser->getRoles())){$role = $this
                 ->getDoctrine()
                 ->getRepository(Role::class);
-            $editorRole = $role->findOneBy(['name' => 'ROLE_EDITOR']);
-            $currentUser->addRole($editorRole);
-            $this->userService->save($currentUser);
+                $editorRole = $role->findOneBy(['name' => 'ROLE_EDITOR']);
+                $currentUser->addRole($editorRole);
+                $this->userService->save($currentUser);
+            }
+
             $this->addFlash('success', "Add tyre for sale successful.");
-            return $this->redirectToRoute('tyres_view_all');
+            return $this->redirectToRoute('tyres_view_mine');
         }
 
         return $this->render("tyre/create.html.twig",
@@ -196,7 +199,8 @@ class TyreController extends Controller
             return $this->redirectToRoute('homepage');
         }
         $this->tyreService->delete($tyre);
-        return $this->redirectToRoute('tyres_view_all');
+        $this->addFlash('success', 'The tyre was successfully deleted!');
+        return $this->redirectToRoute('tyres_view_mine');
     }
 
 

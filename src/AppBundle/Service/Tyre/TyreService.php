@@ -71,14 +71,22 @@ class TyreService implements TyreServiceInterface
      * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function delete(Tyre $tyre){
-       $this->tyreRepository->remove($tyre);
+       return $this->tyreRepository->remove($tyre);
     }
 
+    /**
+     * @param int $id
+     * @return array
+     */
     public function findById(int $id)
     {
         return $this->tyreRepository->findBy(['seller' => $id]);
     }
 
+    /**
+     * @param $cartId
+     * @return array
+     */
     public function findTyresByCartId($cartId){
         $tyres = $this
             ->tyreRepository
