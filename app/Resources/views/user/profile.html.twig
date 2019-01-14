@@ -1,67 +1,75 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
-<div class="jumbotron">
-    <h1 style="text-align: center; color: yellow">My Profile</h1>
-    <hr/>
-    <h3 style="text-align: center">Name:</h3>
-    <h3 class="text-success" style="text-align: center"> {{ user.fullName }}</h3>
-    <hr/>
-    <h3 style="text-align: center">Email:</h3>
-    <h3 class="text-success" style="text-align: center"> {{ user.email }}</h3>
-    <hr/>
-    <h3 style="text-align: center">Address:</h3>
-    <h3 class="text-success" style="text-align: center"> {{ user.address }}</h3>
-    <hr/>
-    <h3 style="text-align: center">Phone:</h3>
-    <h3 class="text-success" style="text-align: center"> {{ user.phone }}</h3>
-    <hr/>
-    <h3 style="text-align: center">My money:</h3>
-    <h3 class="text-success" style="text-align: center"> {{ user.money }} лв.</h3>
-    <hr/>
-    <div class="container" style="text-align: center">
-        <a href="{{ path('users_deposit',{'id':app.user.id}) }}">
-            <button class="btn-primary">Deposit money</button>
-        </a>
+    <div class="jumbotron">
+        <h1 style="text-align: center; color: yellow">My Profile</h1>
+        <hr/>
+        <h3 style="text-align: center">Name:</h3>
+        <h3 class="text-success" style="text-align: center"> {{ user.fullName }}</h3>
+        <hr/>
+        <h3 style="text-align: center">Email:</h3>
+        <h3 class="text-success" style="text-align: center"> {{ user.email }}</h3>
+        <hr/>
+        <h3 style="text-align: center">Address:</h3>
+        <h3 class="text-success" style="text-align: center"> {{ user.address }}</h3>
+        <hr/>
+        <h3 style="text-align: center">Phone:</h3>
+        <h3 class="text-success" style="text-align: center"> {{ user.phone }}</h3>
+        <hr/>
+        <h3 style="text-align: center">My money:</h3>
+        <h3 class="text-success" style="text-align: center"> {{ user.money }} лв.</h3>
+        <hr/>
+        <div class="container" style="text-align: center">
+            <a href="{{ path('users_deposit',{'id':app.user.id}) }}">
+                <button class="btn-primary">Deposit money</button>
+            </a>
+        </div>
+        <hr/>
+        <h1 style="text-align: center; color: yellow">My Purchases</h1>
+        {% if app.getUser().isEditor() %}
+            <div class="container" style="text-align: center">
+                <a href="{{ path('promotions_add',{'id':app.user.id}) }}">
+                    <button class="btn-primary">Add promotion</button>
+                </a>
+            </div>
+            <hr/>
+        {% endif %}
+        {% if purchases is empty %}
+            <div class="text-danger" style="text-align: center"><h2>Not purchases yet!</h2>
+            </div>
+        {% else %}
+            <table class="table table-primary" border="2" style="background-color: greenyellow">
+                <thead class="thead-dark">
+                <tr>
+                    <th class="text-secondary" style="text-align: center">Number:</th>
+                    <th class="text-secondary" style="text-align: center">Purchase Date:</th>
+                    <th class="text-secondary" style="text-align: center">Purchase Total Sum:</th>
+                    <th class="text-secondary" style="text-align: center">Purchase Address:</th>
+                    <th class="text-secondary" style="text-align: center">Number Tyres</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for purchase in purchases %}
+                <tr>
+                    <td>{{ loop.index }}.</td>
+                    {# @var purchase \AppBundle\Entity\Purchase #}
+                    <td>
+                        <span style="color: darkmagenta">{{ purchase.createDate|date('F jS \\a\\t g:ia', 'Europe/Sofia') }}</span>
+                    </td>
+                    <td>
+                        <span style="color: darkmagenta">{{ purchase.totalSum }} лв.</span>
+                    </td>
+                    <td>
+                        <span style="color: darkmagenta">{{ purchase.deliveryAddress }}</span>
+                    </td>
+                    <td>
+                        <span style="color: darkmagenta">{{ purchase.totalTyres }}</span>
+                    </td>
+                </tr>
+                </tbody>
+                {% endfor %}
+            </table>
+        {% endif %}
     </div>
-    <hr/>
-    <h1 style="text-align: center; color: yellow">My Purchases</h1>
-    {% if purchases is empty %}
-    <div class="text-danger" style="text-align: center"><h2>Not purchases yet!</h2>
-    </div>
-    {% else %}
-    <table class="table table-primary" border="2" style="background-color: greenyellow">
-        <thead class="thead-dark">
-        <tr>
-            <th class="text-secondary" style="text-align: center">Number:</th>
-            <th class="text-secondary" style="text-align: center">Purchase Date:</th>
-            <th class="text-secondary" style="text-align: center">Purchase Total Sum:</th>
-            <th class="text-secondary" style="text-align: center">Purchase Address:</th>
-            <th class="text-secondary" style="text-align: center">Number Tyres</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for purchase in purchases %}
-        <tr>
-            <td>{{ loop.index }}.</td>
-            {# @var purchase \AppBundle\Entity\Purchase #}
-            <td>
-                <span style="color: darkmagenta">{{ purchase.createDate|date('F jS \\a\\t g:ia', 'Europe/Sofia') }}</span>
-            </td>
-            <td>
-                <span style="color: darkmagenta">{{ purchase.totalSum }} лв.</span>
-            </td>
-            <td>
-                <span style="color: darkmagenta">{{ purchase.deliveryAddress }}</span>
-            </td>
-            <td>
-                <span style="color: darkmagenta">{{ purchase.totalTyres }}</span>
-            </td>
-        </tr>
-        </tbody>
-        {% endfor %}
-    </table>
-    {% endif %}
-</div>
 {% endblock %}
 

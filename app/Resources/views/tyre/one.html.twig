@@ -7,34 +7,43 @@
             <!--Heading with class .list-group-item-heading-->
             <div>
                 <h3 class="text-warning" style="text-align: center">{{ tyre.make }} {{ tyre.model }}</h3>
-                <h4 class="list-group-item-heading text-success" style="text-align: center">{{ tyre.width }}/{{ tyre.height }}
+                <h4 class="list-group-item-heading text-success" style="text-align: center">{{ tyre.width }}
+                    /{{ tyre.height }}
                     R{{ tyre.diameter }} {{ tyre.speedIndex }} {{ tyre.loadIndex }}</h4>
                 <img class="media-object img-rounded img-responsive" width="100px" height="200px%"
                      src="{{ asset('uploads/images/tyres/' ~ tyre.image) }}"
                      alt="placehold.it/350x250">
                 <span style="margin-left: 600px;">
-                            <span  class="text-warning">Price: </span ><span style="font-size: 30px" class="price" >{{ tyre.price }}</span>
+                            <span class="text-warning">Price: </span><span style="font-size: 30px"
+                                                                           class="price">{{ tyre.price }}</span>
                 </span>
 
             </div>
-            <span  class="text-warning" style="bottom: auto">Quantity:  </span><span class="quantity">{{ tyre.quantity  }}</span> left
+            <span class="text-warning" style="bottom: auto">Quantity:  </span><span
+                    class="quantity">{{ tyre.quantity }}</span> left
             <p class="list-group-item-text"><span class="text-warning">Viewed: </span> {{ tyre.viewCount }} times</p>
             <p class="list-group-item-text"><span class="text-warning">Seller: </span> {{ tyre.seller.fullName }}</p>
             <p class="list-group-item-text"><span class="text-warning">Category: </span> {{ tyre.category.name }}s</p>
-            <p class="list-group-item-text"><span class="text-warning">Date Added: </span> {{ tyre.createDate|date('F jS \\a\\t g:ia', 'Europe/Sofia') }}</p>
+            <p class="list-group-item-text"><span
+                        class="text-warning">Date Added: </span> {{ tyre.createDate|date('F jS \\a\\t g:ia', 'Europe/Sofia') }}
+            </p>
         </div>
         {% if app.User() and (app.getUser().isAdmin() or app.getUser().isSeller(tyre)) %}
             <a href="{{ path('tyres_edit', {'id': tyre.id}) }}">
                 <button type="button" class="btn btn-warning btn-lg btn-block"> Edit</button>
             </a>
-                <button type="button" class="btn btn-danger btn-lg btn-block"  data-toggle="modal" data-target="#modalDelete"  role="button"> Delete</button>
+            <button type="button" class="btn btn-danger btn-lg btn-block" data-toggle="modal" data-target="#modalDelete"
+                    role="button"> Delete
+            </button>
         {% else %}
             <a href="{{ path('cart_add', {'tyreId': tyre.id}) }}">
-                <button type="button" class="btn btn-success btn-lg btn-block"> Add To Cart</button></a>
+                <button type="button" class="btn btn-success btn-lg btn-block"> Add To Cart</button>
+            </a>
         {% endif %}
         {% if app.User() and app.getUser().isAdmin() and not app.getUser().isSeller(tyre) %}
             <a href="{{ path('cart_add', {'tyreId': tyre.id}) }}">
-                <button type="button" class="btn btn-success btn-lg btn-block"> Add To Cart</button></a>
+                <button type="button" class="btn btn-success btn-lg btn-block"> Add To Cart</button>
+            </a>
         {% endif %}
         <hr>
     </div>
@@ -44,31 +53,39 @@
                 role="button">
             Add feedback for the product
         </button>
+        {% if app.User() and (app.getUser().isAdmin() or app.getUser().isSeller(tyre)) %}
+            <button id="btnComment" type="button" class="btn btn-primary" data-toggle="modal"
+                    data-target="#promotionForm"
+                    role="button">
+                Add Tyre To Promotion
+            </button>
+        {% endif %}
     </div>
 
     <div class="container">
         {% for comment in comments %}
-        <div class="card border-primary mb-3">
-            <div class="post-heading">
-                <div class="pull-left image">
-                    <img class="img-circle avatar" src="{{ asset('uploads/images/avatars/' ~ comment.author.avatar) }}"
-                         alt="placehold.it/350x250" width="100" height="100">
-                </div>
-                <div class="pull-left meta">
-                    <div class="title h5">
-                        {#@var comment \AppBundle\Entity\Comment#}
-                        <a href="#"><b>{{ comment.author.fullName }}</b></a>
-                        write:
+            <div class="card border-primary mb-3">
+                <div class="post-heading">
+                    <div class="pull-left image">
+                        <img class="img-circle avatar"
+                             src="{{ asset('uploads/images/avatars/' ~ comment.author.avatar) }}"
+                             alt="placehold.it/350x250" width="100" height="100">
+                    </div>
+                    <div class="pull-left meta">
+                        <div class="title h5">
+                            {#@var comment \AppBundle\Entity\Comment#}
+                            <a href="#"><b>{{ comment.author.fullName }}</b></a>
+                            write:
+                        </div>
                     </div>
                 </div>
+                <h6 class="text-muted time">{{ comment.dateAdded()|date('F jS \\a\\t g:ia', 'Europe/Sofia') }}</h6>
+                <div class="post-description">
+                    <p>{{ comment.content }}</p>
+                </div>
             </div>
-            <h6 class="text-muted time">{{ comment.dateAdded()|date('F jS \\a\\t g:ia', 'Europe/Sofia') }}</h6>
-            <div class="post-description">
-                <p>{{ comment.content }}</p>
-            </div>
-        </div>
 
-    {% endfor %}
+        {% endfor %}
     </div>
 
 
@@ -97,6 +114,34 @@
         </div>
     </div>
 
+    <div class="modal fade" id="promotionForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h4 class="modal-title w-100 font-weight-bold">Choose promotion</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body mx-3">
+                    <form method="post" action="{{ path('promotions_add_tyre', {'tyreId': tyre.id}) }}"
+                          class="md-form mb-5">
+                        <i class="fa fa-envelope prefix grey-text"></i>
+                        <label data-error="wrong" data-success="right" for="promotions">Your Promotions:</label>
+                        <select id="promotions" class="form-control-validate" name="promotionId">
+                            {% for promotion in promotions %}
+                                <option  value="{{ promotion.id }}">{{ promotion.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="submit" class="btn btn-primary" value="Submit"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -108,7 +153,8 @@
                     </button>
                 </div>
                 <div class="modal-body mx-3">
-                    <form method="post" action="{{ path('tyres_delete', {'id': tyre.id}) }}" class="md-form mb-5" name="delete">
+                    <form method="post" action="{{ path('tyres_delete', {'id': tyre.id}) }}" class="md-form mb-5"
+                          name="delete">
                         <i class="fa fa-envelope prefix grey-text"></i>
                         <label data-error="wrong" data-success="right" for="comment_content">
                             {{ tyre.make }} {{ tyre.model }} {{ tyre.width }}/{{ tyre.height }} R{{ tyre.diameter }}
@@ -118,7 +164,9 @@
                         </label>
 
                         <div class="modal-footer d-flex justify-content-center">
-                            <button type="button" class="btn-primary close" data-dismiss="modal" aria-label="Close">Cancel</button>
+                            <button type="button" class="btn-primary close" data-dismiss="modal" aria-label="Close">
+                                Cancel
+                            </button>
                             <input type="submit" class="btn btn-danger" value="Delete"/>
                         </div>
                     </form>
@@ -131,9 +179,9 @@
     <script>
         $('#btnComment').on('click', function (event) {
             event.preventDefault();
-            let commentConteiner = $('#comments');
-            commentConteiner.append(form);
-            commentConteiner.toggle();
+            let commentContainer = $('#comments');
+            commentContainer.append(form);
+            commentContainer.toggle();
         });
     </script>
 {% endblock %}

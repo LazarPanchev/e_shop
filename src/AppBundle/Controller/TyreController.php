@@ -2,11 +2,14 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\PromotionsTyres;
 use AppBundle\Entity\Role;
 use AppBundle\Entity\Tyre;
 use AppBundle\Entity\User;
+use AppBundle\Form\PromotionsTyresType;
 use AppBundle\Form\TyreType;
 use AppBundle\Service\Comment\CommentServiceInterface;
+use AppBundle\Service\Promotion\PromotionServiceInterface;
 use AppBundle\Service\Tyre\TyreServiceInterface;
 use AppBundle\Service\User\UserServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -36,11 +39,18 @@ class TyreController extends Controller
      */
     private $tyreService;
 
+    /**
+     * @var PromotionServiceInterface
+     */
+    private $promotionService;
+
     public function __construct(TyreServiceInterface $tyreService,
-                                UserServiceInterface $userService)
+                                UserServiceInterface $userService,
+                                PromotionServiceInterface $promotionService)
     {
         $this->tyreService = $tyreService;
         $this->userService = $userService;
+        $this->promotionService = $promotionService;
     }
 
     /**
@@ -95,10 +105,15 @@ class TyreController extends Controller
         $tyre = $this->findTyre($id);
         $comments = $commentService->findComments($tyre->getId());
 
+        $promotions = $this
+            ->promotionService
+            ->findPromotionsBySellerId($this->getUser()->getId());
+
         return $this->render("tyre/one.html.twig",
             [
                 'tyre' => $tyre,
-                'comments' => $comments
+                'comments' => $comments,
+                'promotions' => $promotions
             ]);
     }
 
@@ -129,9 +144,10 @@ class TyreController extends Controller
                 ->tyreService
                 ->create($tyre, $fileName);
 
-            if(!in_array('ROLE_EDITOR', $currentUser->getRoles())){$role = $this
-                ->getDoctrine()
-                ->getRepository(Role::class);
+            if (!in_array('ROLE_EDITOR', $currentUser->getRoles())) {
+                $role = $this
+                    ->getDoctrine()
+                    ->getRepository(Role::class);
                 $editorRole = $role->findOneBy(['name' => 'ROLE_EDITOR']);
                 $currentUser->addRole($editorRole);
                 $this->userService->save($currentUser);

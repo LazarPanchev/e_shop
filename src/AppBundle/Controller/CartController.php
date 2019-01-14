@@ -172,8 +172,7 @@ class CartController extends Controller
     private function handlePurchaseAction($request,Purchase $purchase,$currentUser, $purchaseDetails)
     {
         $quantitiesArr = $request->request->all()['cart'];
-        $purchase->setUserId($currentUser);
-        $this->purchaseService->savePurchase($purchase);
+
 
         $totalPurchaseSum=$this
             ->purchaseService
@@ -188,6 +187,10 @@ class CartController extends Controller
             $this->addFlash('error', 'Not enough money for this purchase. Please make a deposit!');
             return $this->redirectToRoute('cart_show');
         }
+
+        $purchase->setUserId($currentUser);
+        $this->purchaseService->savePurchase($purchase);
+
 
         $this->purchaseService
             ->finalizePurchase($purchaseDetails,$purchase,$quantitiesArr, $currentUser,$totalPurchaseSum);

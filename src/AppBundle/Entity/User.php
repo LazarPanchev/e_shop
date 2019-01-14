@@ -150,6 +150,14 @@ class User implements UserInterface
      */
     private $purchases;
 
+    /**
+     * @var ArrayCollection|Promotion[]
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Promotion",mappedBy="sellerId")
+     */
+    private $promotions;
+
+
+
     public function __construct()
     {
         $this->dateCreated = new \DateTime('now');
@@ -158,6 +166,7 @@ class User implements UserInterface
         $this->tyres = new ArrayCollection();
         $this->comments = new  ArrayCollection();
         $this->purchases = new ArrayCollection();
+        $this->promotions= new ArrayCollection();
     }
 
 
@@ -519,6 +528,40 @@ class User implements UserInterface
         $this->purchases[] = $purchase;
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function isEditor()
+    {
+        return in_array('ROLE_EDITOR', $this->getRoles());
+    }
+
+    /**
+     * @return Promotion[]|ArrayCollection
+     */
+    public function getPromotions()
+    {
+        return $this->promotions;
+    }
+
+    /**
+     * @param Promotion[]|ArrayCollection $promotions
+     */
+    public function setPromotions($promotions)
+    {
+        $this->promotions = $promotions;
+    }
+
+    /**
+     * @param Promotion $promotion
+     */
+    public function addPromotion(Promotion $promotion){
+        $this->promotions[]=$promotion;
+    }
+
+
+
 
 //    public function __sleep(){
 //        return array($this->getId(), $this->getUsername(), $this->getEmail());

@@ -4,8 +4,11 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Comment;
 use AppBundle\Entity\Tyre;
+use AppBundle\Entity\User;
 use AppBundle\Form\CommentType;
 use AppBundle\Service\Comment\CommentServiceInterface;
+use AppBundle\Service\Purchase\PurchaseServiceInterface;
+use AppBundle\Service\Tyre\TyreServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,9 +21,24 @@ class CommentController extends Controller
      */
     private $commentService;
 
-    public function __construct(CommentServiceInterface $commentService)
+    /**
+     * @var TyreServiceInterface
+     */
+    private $tyreService;
+
+    /**
+     * @var PurchaseServiceInterface
+     */
+    private $purchaseService;
+
+
+    public function __construct(CommentServiceInterface $commentService,
+                                TyreServiceInterface $tyreService,
+                                PurchaseServiceInterface $purchaseService)
     {
         $this->commentService=$commentService;
+        $this->tyreService=$tyreService;
+        $this->purchaseService=$purchaseService;
     }
 
     /**
@@ -32,10 +50,12 @@ class CommentController extends Controller
      */
     public function addComment(Request $request, int $tyreId)
     {
+        /** @var User $user */
+        $user=$this->getUser();
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
-        $user=$this->getUser();
+
 
         $this->commentService->addComment($comment,$tyreId, $user);
         return $this->redirectToRoute('tyres_view_one',

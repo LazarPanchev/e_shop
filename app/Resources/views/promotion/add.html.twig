@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    <hr>
+    <div class="jumbotron">
+        <div class="well">
+            {#<form method="post" action="{{ path('security_login') }}" name="promotion" class="form-horizontal">#}
+            <form method="post" name="promotion" class="form-horizontal">
+                <fieldset>
+                    <legend><h1 style="text-align: center; color: yellow">Promotion</h1></legend>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="promotion_name">Promotion Name</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="promotion_name"
+                                   name="promotion[name]" placeholder="Name" value="{{ promotion.name }}"/>
+                            <div class="text-danger" style="color: red">
+                                {{ form_errors(form.name) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="promotion_discount">Discount %</label>
+                        <div class="col-sm-4">
+                            <input type="number" class="form-control" id="promotion_discount"
+                                   name="promotion[discount]" placeholder="Discount %" value="{{ promotion.discount }}"/>
+                            <div class="text-danger" style="color: red">
+                                {{ form_errors(form.discount) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="validFrom">Promotion Valid From</label>
+                        <div class="col-sm-4">
+                            <input type="date" class="form-control" id="validFrom"
+                                   name="promotion[validFrom]" placeholder="Valid From" value="{{ promotion.validFrom|date('Y-m-d') }}"/>
+                            <div class="text-danger" style="color: red">
+                                {{ form_errors(form.validFrom) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="promotion_valid_to">Promotion Valid To</label>
+                        <div class="col-sm-4">
+                            <input type="date" class="form-control" id="promotion_valid_to"
+                                   name="promotion[validTo]" placeholder="Valid To" value="{{ promotion.validTo|date('Y-m-d') }}"/>
+                            <div class="text-danger" style="color: red">
+                                {{ form_errors(form.validTo) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="promotion_weight">Promotion Weight</label>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.weight) }}
+                        </div>
+                        <div class="text-danger" style="color: red">
+                            {{ form_errors(form.weight) }}
+                        </div>
+                    </div>
+                    <div class="col-sm-4 control-label">
+                        {{ form_widget(form.Add) }}
+                    </div>
+                </fieldset>
+                {{ form_row(form._token) }}
+            </form>
+        </div>
+    </div>
+{% endblock %}

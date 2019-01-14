@@ -28,7 +28,6 @@ class TyreRepository extends EntityRepository
 
     /**
      * @param Tyre $tyre
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(Tyre $tyre){
         $this->_em->persist($tyre);
@@ -37,7 +36,6 @@ class TyreRepository extends EntityRepository
 
     /**
      * @param Tyre $tyre
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function remove(Tyre $tyre){
         $this->_em->remove($tyre);
