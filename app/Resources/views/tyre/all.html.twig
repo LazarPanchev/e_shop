@@ -19,17 +19,26 @@
                         <img class="media-object img-rounded img-responsive" width="100px" height="200px%"
                              src="{{ asset('uploads/images/tyres/' ~ tyre.image) }}"
                              alt="placehold.it/350x250">
-                        <span style="margin-left: 600px;">
-                            <span style="font-size: 30px" class="price" ><span  class="text-warning">Price: </span >{{ tyre.price }} <span class="text-warning" > лв.</span></span>
-                </span>
-
+                        {% if tyre.promotionPrice != 0  %}
+                            <span style="margin-left: 500px;" >
+                    <span class="text-warning">Old Price: </span>
+                        <span style="font-size: 30px" class="price strike" id="price">{{ tyre.price }}</span>
+                        <span class="text-danger" style="padding-left: 15px">New Price </span>
+                    <span style="font-size: 40px" class="newPrice">{{ tyre.promotionPrice|number_format(2) }}</span>
+                    </span>
+                        {% else %}
+                            <span >
+                            <span class="text-warning" style="margin-left: 700px;">Price: </span>
+                            <span style="font-size: 30px" class="price"id="price">{{ tyre.price }}</span>
+                        </span>
+                        {% endif %}
                     </div>
                     <span  class="text-warning" style="bottom: auto">Quantity:  </span><span class="quantity">{{ tyre.quantity  }}</span> left
                     <p class="list-group-item-text"><span class="text-warning">Viewed: </span> {{ tyre.viewCount }} times</p>
                     <p class="list-group-item-text"><span class="text-warning">Seller: </span> {{ tyre.seller.fullName }}</p>
                     <p class="list-group-item-text"><span class="text-warning">Category: </span> {{ tyre.category.name }}s</p>
                 </div>
-                    <a href="{{ path('tyres_view_one', {'id': tyre.id}) }}"><button type="button" class="btn btn-primary btn-lg btn-block"> View details</button></a>
+                    <a href="{{ path('tyres_view_one', {'tyreId': tyre.id}) }}"><button type="button" class="btn btn-primary btn-lg btn-block"> View details</button></a>
                 <hr>
             </div>
             {% else %}

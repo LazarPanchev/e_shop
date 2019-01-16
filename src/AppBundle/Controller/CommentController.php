@@ -59,6 +59,6 @@ class CommentController extends Controller
 
         $this->commentService->addComment($comment,$tyreId, $user);
         return $this->redirectToRoute('tyres_view_one',
-            ['id'=>$tyreId]);
+            ['tyreId'=>$tyreId]);
     }
 }

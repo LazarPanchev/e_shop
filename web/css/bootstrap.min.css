@@ -54,7 +54,22 @@ html {
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
 }
+.strike{
+    text-decoration: line-through;
+    text-decoration-color: red;
+}
 .price{
+    color: lightgreen;
+    font-size: 60px;
+    font-weight: 300;
+    letter-spacing: 0px;
+    line-height: 60px;
+    padding: 0;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+.newPrice{
     color: red;
     font-size: 60px;
     font-weight: 300;
@@ -64,6 +79,7 @@ html {
     margin-left: 10px;
     vertical-align: middle;
 }
+
 .quantity{
     color: palevioletred;
     font-size: 25px;

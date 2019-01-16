@@ -20,9 +20,19 @@ interface TyreServiceInterface
 
     public function findOne(int $id);
 
-    public function findById(int $id);
-
     public function create(Tyre $tyre, string $fileName);
 
     public function delete(Tyre $tyre);
+
+    public function edit($tyre, $fileName);
+
+    public function findAllTyresWithPromotions();
+
+    public function findTyresWithPromotionsByUserId($currentUserId);
+
+    public function findOneWithPromotionsAndComments($tyreId);
+
+    public function increaseViewCount($tyre);
+
+    public function setPromotionsToPurchaseDetails($purchaseDetails);
 }

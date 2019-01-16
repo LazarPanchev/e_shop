@@ -53,4 +53,81 @@ class TyreRepository extends EntityRepository
             ->getQuery();
         return $query->getResult();
     }
+
+    public function findAllWithPromotions()
+    {
+        $query =$this->_em->createQueryBuilder()
+            ->select('tyre,seller,category,promotions,promotionsTyres')
+            ->from('AppBundle:Tyre','tyre')
+            ->leftJoin('tyre.category','category')
+            ->leftJoin('tyre.seller','seller')
+            ->leftJoin('seller.promotions','promotions')
+            ->leftJoin('promotions.promotionsTyres','promotionsTyres')
+            ->getQuery();
+
+        return $query->getResult();
+    }
+
+    public function findAllWithPromotionsByUserId($userId)
+    {
+        $query =$this->_em->createQueryBuilder()
+            ->select('tyre,seller,category,promotions,promotionsTyres')
+            ->from('AppBundle:Tyre','tyre')
+            ->where('tyre.seller = :userId')
+            ->setParameter('userId',$userId)
+            ->leftJoin('tyre.category','category')
+            ->leftJoin('tyre.seller','seller')
+            ->leftJoin('seller.promotions','promotions')
+            ->leftJoin('promotions.promotionsTyres','promotionsTyres')
+            ->getQuery();
+
+        return $query->getResult();
+    }
+
+    /**
+     * @param $id
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findTyreWithPromotions($id)
+    {
+        $query =$this->_em->createQueryBuilder()
+            ->select('tyre,seller,category,promotions,promotionsTyres')
+            ->from('AppBundle:Tyre','tyre')
+            ->where('tyre.id = :id')
+            ->setParameter('id',$id)
+            ->leftJoin('tyre.category','category')
+            ->leftJoin('tyre.seller','seller')
+            ->leftJoin('seller.promotions','promotions')
+            ->leftJoin('promotions.promotionsTyres','promotionsTyres')
+            ->getQuery();
+
+        return $query->getSingleResult();
+    }
+
+    /**
+     * @param $tyreId
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findOneWithPromotionsAndComments($tyreId)
+    {
+        $query =$this->_em->createQueryBuilder()
+            ->select('tyre,seller,comments,category,promotions,promotionsTyres')
+            ->from('AppBundle:Tyre','tyre')
+            ->where('tyre.id = :id')
+            ->setParameter('id',$tyreId)
+            ->leftJoin('tyre.comments','comments')
+            ->leftJoin('tyre.category','category')
+            ->leftJoin('tyre.seller','seller')
+            ->leftJoin('seller.promotions','promotions')
+            ->leftJoin('promotions.promotionsTyres','promotionsTyres')
+            ->orderBy('comments.dateAdded', 'DESC')
+            ->getQuery();
+
+        return $query->getSingleResult();
+    }
+
 }

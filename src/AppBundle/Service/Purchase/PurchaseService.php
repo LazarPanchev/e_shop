@@ -120,7 +120,11 @@ class PurchaseService implements PurchaseServiceInterface
             if ($quantitiesArr[$index . ($i + 1)] === '') {
                 return false;
             }
-            $currentPrice = $currentQuantity * $purchaseDetails[$i]->getTyre()->getPrice();
+            $tyrePrice=$purchaseDetails[$i]->getTyre()->getPrice();
+            if($purchaseDetails[$i]->getTyre()->getPromotionPrice() !== 0){
+                $tyrePrice = $purchaseDetails[$i]->getTyre()->getPromotionPrice();
+            }
+            $currentPrice = $currentQuantity * $tyrePrice;
             $totalPurchaseSum += $currentPrice;
         }
         return $totalPurchaseSum;
@@ -143,7 +147,11 @@ class PurchaseService implements PurchaseServiceInterface
             $currentPurchase->setPurchaseId($purchase);
             $quantity = intval($quantitiesArr[$index . ($i + 1)]);
             $currentPurchase->setQuantity($quantity);
-            $totalPrice = $quantity * $currentPurchase->getTyre()->getPrice();
+            $currentTyrePrice=$currentPurchase->getTyre()->getPrice();
+            if($currentPurchase->getTyre()->getPromotionPrice() !== 0){
+                $currentTyrePrice = $currentPurchase->getTyre()->getPromotionPrice();
+            }
+            $totalPrice = $quantity * $currentTyrePrice;
             $currentPurchase->setPrice($totalPrice);
             $currentPurchase->setStatus(1);
             $this->savePurchaseDetails($currentPurchase);

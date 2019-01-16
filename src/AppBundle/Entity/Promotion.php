@@ -71,10 +71,11 @@ class Promotion
     private $weight;
 
     /**
+     * @var User
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="promotions")
      * @ORM\JoinColumn(name="seller_id", referencedColumnName="id")
      */
-    private $sellerId;
+    private $seller;
 
     /**
      * @var ArrayCollection|PromotionsTyres[]
@@ -236,18 +237,26 @@ class Promotion
     /**
      * @return mixed
      */
-    public function getSellerId()
+    public function getSeller()
     {
-        return $this->sellerId;
+        return $this->seller;
     }
 
     /**
-     * @param mixed $sellerId
+     * @param User $seller
      */
-    public function setSellerId($sellerId)
+    public function setSeller($seller)
     {
-        $this->sellerId = $sellerId;
+        $this->seller = $seller;
     }
 
+    public function isTyreInPromotion($tyreId){
+        foreach ($this->getPromotionsTyres() as $promotionsTyre){
+            if($promotionsTyre->getTyreId() == $tyreId){
+                return true;
+            }
+        }
+        return false;
+    }
 
 }

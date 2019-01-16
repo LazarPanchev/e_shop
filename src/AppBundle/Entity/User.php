@@ -152,7 +152,7 @@ class User implements UserInterface
 
     /**
      * @var ArrayCollection|Promotion[]
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Promotion",mappedBy="sellerId")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Promotion",mappedBy="seller")
      */
     private $promotions;
 
@@ -559,9 +559,6 @@ class User implements UserInterface
     public function addPromotion(Promotion $promotion){
         $this->promotions[]=$promotion;
     }
-
-
-
 
 //    public function __sleep(){
 //        return array($this->getId(), $this->getUsername(), $this->getEmail());

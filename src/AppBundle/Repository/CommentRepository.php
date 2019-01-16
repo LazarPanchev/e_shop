@@ -29,25 +29,10 @@ class CommentRepository extends EntityRepository
 
     /**
      * @param Comment $comment
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function save(Comment $comment)
     {
         $this->_em->persist($comment);
         $this->_em->flush();
-    }
-
-    public function findByIdASC(int $tyreId)
-    {
-        $query = $this->_em
-            ->createQueryBuilder()
-            ->select('comment')
-            ->from('AppBundle:Comment', 'comment')
-            ->where('comment.tyre = :tyreId')
-            ->setParameter(':tyreId', $tyreId)
-            ->orderBy('comment.id', 'DESC')
-            ->getQuery();
-
-        return $query->getResult();
     }
 }

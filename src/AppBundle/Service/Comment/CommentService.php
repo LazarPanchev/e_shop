@@ -34,15 +34,6 @@ class CommentService implements CommentServiceInterface
         $this->tyreRepository=$tyreRepository;
     }
 
-    /**
-     * @param int $tyreId
-     * @return array
-     */
-    public function findComments(int $tyreId)
-    {
-        return $this->commentRepository->findByIdASC($tyreId);
-    }
-
 
     /**
      * @param Comment $comment

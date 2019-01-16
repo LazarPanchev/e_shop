@@ -10,6 +10,7 @@ namespace AppBundle\Service\Promotion;
 
 use AppBundle\Entity\Promotion;
 use AppBundle\Entity\PromotionsTyres;
+use AppBundle\Entity\Tyre;
 use AppBundle\Repository\PromotionRepository;
 use AppBundle\Repository\PromotionsTyresRepository;
 use AppBundle\Repository\TyreRepository;
@@ -44,10 +45,10 @@ class PromotionService implements PromotionServiceInterface
 
     /**
      * @param Promotion $promotion
-     * @param $userId
+     * @param $user
      * @return bool
      */
-    public function addPromotion(Promotion $promotion, $userId)
+    public function addPromotion(Promotion $promotion, $user)
     {
         $validFrom = $promotion->getValidFrom();
         $validTo = $promotion->getValidTo();
@@ -64,26 +65,12 @@ class PromotionService implements PromotionServiceInterface
             $message = "Valid from date must be before valid to date!";
             return $message;
         }
-        $promotion->setSellerId($userId);
+        $promotion->setSeller($user);
+
         $this->promotionRepository->save($promotion);
 
         return $message;
     }
-//
-//    private function addTyresToPromotion($promotionId, $userId)
-//    {
-//        /** @var Tyre[] $myTyres */
-//        $myTyres = $this->tyreRepository->findBy(['seller' => $userId]);
-//        $currentPromotion = $this->promotionRepository->find($promotionId);
-//        foreach ($myTyres as $myTyre) {
-//            /** @var Promotion $currentPromotion */
-//            $promotionsTyre = new PromotionsTyres();
-//            $promotionsTyre->setPromotionId($promotionId);
-//            $promotionsTyre->setTyreId($myTyre->getId());
-//            $currentPromotion->addPromotionsTyre($promotionsTyre);
-//        }
-//        $this->promotionRepository->save($currentPromotion);
-//    }
 
     public function findPromotionById($promotionId)
     {
@@ -98,24 +85,111 @@ class PromotionService implements PromotionServiceInterface
      */
     public function addTyreToPromotion($promotion, $tyreId)
     {
-        $existTyre=$this->tyreRepository->find($tyreId);
-        if(null===$existTyre){
-            return false;
+        $message = '';
+        $existTyre = $this->tyreRepository->find($tyreId);
+        if (null === $existTyre) {
+            $message = 'Tyre not exist';
+        }
+        /** @var Promotion $promotion */
+        $existPromotionTyre = $this
+            ->promotionsTyresRepository
+            ->findBy(['tyreId' => $tyreId,
+                'promotionId' => $promotion->getId()]);
+
+
+        if ($existPromotionTyre) {
+            $message = 'Tyre already exist in this promotion!';
+        } else {
+            $promotionsTyre = new PromotionsTyres();
+            $tyrePrice = $existTyre->getPrice();
+            $promotionPrice = $tyrePrice - (($tyrePrice * $promotion->getDiscount()) / 100);
+            $promotionsTyre
+                ->setPromotionId($promotion)
+                ->setTyreId($tyreId)
+                ->setPromotionPrice($promotionPrice);
+
+            $this->promotionsTyresRepository
+                ->save($promotionsTyre);
         }
 
-        $promotionsTyre= new PromotionsTyres();
-        $promotionsTyre
-            ->setPromotionId($promotion)
-            ->setTyreId($tyreId);
-
-        $this->promotionsTyresRepository
-            ->save($promotionsTyre);
-        return true;
+        return $message;
     }
 
+    /**
+     * @param $sellerId
+     * @return array
+     */
     public function findPromotionsBySellerId($sellerId)
     {
-        $promotions= $this->promotionRepository->findBy(['sellerId'=>$sellerId]);
+        $promotions = $this->promotionRepository->findBy(['seller' => $sellerId]);
         return $promotions;
+    }
+
+    /**
+     * @param $id
+     * @return array|null
+     */
+    public function findTyreInPromotion($id)
+    {
+        $todayDate = new \DateTime('now');
+        $tyreInPromotion = $this->promotionsTyresRepository->findPromotionByTyreIdAndDate($id, $todayDate);
+        if ($tyreInPromotion === []) {
+            return null;
+        }
+
+        return $tyreInPromotion;
+    }
+
+    public function setPromotions($tyres)
+    {
+        foreach ($tyres as $tyre) {
+            $this->setPromotionsOneTyre($tyre);
+        }
+    }
+
+    public function setPromotionsOneTyre($tyre)
+    {
+        /** @var Tyre $tyre */
+        $promotions = $tyre->getSeller()->getPromotions();
+        $promotionPrice = 0;
+        $baseWeight = PHP_INT_MAX;
+        foreach ($promotions as $promotion) {
+            /** @var Promotion $promotion */
+            if ($promotion->isTyreInPromotion($tyre->getId())) {
+                if ($promotion->getWeight() < $baseWeight) {
+                    $promotionPrice = $tyre->getPrice() - (($tyre->getPrice() * $promotion->getDiscount()) / 100);
+                    $baseWeight = $promotion->getWeight();
+                } elseif ($promotion->getWeight() == $baseWeight) {
+                    $newPrice = $tyre->getPrice() - (($tyre->getPrice() * $promotion->getDiscount()) / 100);
+                    if ($newPrice < $promotionPrice) {
+                        $promotionPrice = $newPrice;
+                    }
+                }
+            }
+        }
+        $tyre->setPromotionPrice($promotionPrice);
+    }
+
+    public function findPromotionsTyresByTyreId($tyreId)
+    {
+        return $this->promotionsTyresRepository->findBy(['tyreId' => $tyreId]);
+    }
+
+    public function savePromotionsTyre($promotionsTyre)
+    {
+        $this->promotionsTyresRepository->save($promotionsTyre);
+    }
+
+    public function checkPromotionsAreActive($promotions)
+    {
+        $activePromotions = [];
+        $todayDate = new \DateTime('now');
+        foreach ($promotions as $promotion) {
+            /** @var Promotion $promotion */
+            if ($promotion->getValidFrom() < $todayDate && $promotion->getValidTo() > $todayDate) {
+                $activePromotions[] = $promotion;
+            }
+        }
+        return $activePromotions;
     }
 }

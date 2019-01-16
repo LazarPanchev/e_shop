@@ -33,12 +33,14 @@ class SearchRepository extends EntityRepository
     public function findByBrand($searchedWord)
     {
         $query = $this->createQueryBuilder('t')
-            ->select('tyre')
+            ->select('tyre,seller,promotions,promotionsTyres')
             ->from('AppBundle:Tyre', 'tyre')
             ->where('tyre.make LIKE :searchedWord')
             ->setParameter('searchedWord', "%$searchedWord%")
-            ->orderBy('tyre.diameter', 'ASC')
-            ->addOrderBy('tyre.width', 'ASC')
+            ->leftJoin('tyre.seller','seller')
+            ->leftJoin('seller.promotions','promotions')
+            ->leftJoin('promotions.promotionsTyres','promotionsTyres')
+            ->orderBy('tyre.viewCount', 'DESC')
             ->getQuery();
 
         return $query->getResult();
@@ -51,12 +53,14 @@ class SearchRepository extends EntityRepository
      */
     public function quickSearchByBrand($brand){
         $query = $this->createQueryBuilder('t')
-            ->select('tyre')
+            ->select('tyre,seller,promotions,promotionsTyres')
             ->from('AppBundle:Tyre', 'tyre')
             ->where('tyre.make = :brand')
             ->setParameter('brand', $brand)
-            ->orderBy('tyre.diameter', 'ASC')
-            ->addOrderBy('tyre.width', 'ASC')
+            ->leftJoin('tyre.seller','seller')
+            ->leftJoin('seller.promotions','promotions')
+            ->leftJoin('promotions.promotionsTyres','promotionsTyres')
+            ->orderBy('tyre.viewCount', 'DESC')
             ->getQuery();
 
         return $query->getResult();
@@ -71,7 +75,7 @@ class SearchRepository extends EntityRepository
     public function quickSearchBySize($width, $height, $diameter)
     {
         $query = $this->createQueryBuilder('t')
-            ->select('tyre')
+            ->select('tyre,seller,promotions,promotionsTyres')
             ->from('AppBundle:Tyre', 'tyre')
             ->where('tyre.width = :width')
             ->setParameter('width', $width)
@@ -79,8 +83,10 @@ class SearchRepository extends EntityRepository
             ->setParameter('height', $height)
             ->andWhere('tyre.diameter = :diameter')
             ->setParameter('diameter', $diameter)
-            ->orderBy('tyre.diameter', 'ASC')
-            ->addOrderBy('tyre.width', 'ASC')
+            ->leftJoin('tyre.seller','seller')
+            ->leftJoin('seller.promotions','promotions')
+            ->leftJoin('promotions.promotionsTyres','promotionsTyres')
+            ->orderBy('tyre.viewCount', 'DESC')
             ->getQuery();
 
         return $query->getResult();
@@ -89,12 +95,15 @@ class SearchRepository extends EntityRepository
     public function quickSearchByCategory($category)
     {
         $query = $this->createQueryBuilder('t')
-            ->select('tyre')
+            ->select('tyre,seller,promotions,promotionsTyres')
             ->from('AppBundle:Tyre', 'tyre')
             ->where('tyre.category = :category')
             ->setParameter('category', $category)
+            ->leftJoin('tyre.seller','seller')
+            ->leftJoin('seller.promotions','promotions')
+            ->leftJoin('promotions.promotionsTyres','promotionsTyres')
             ->orderBy('tyre.diameter', 'ASC')
-            ->addOrderBy('tyre.width', 'ASC')
+            ->orderBy('tyre.viewCount', 'DESC')
             ->getQuery();
 
         return $query->getResult();

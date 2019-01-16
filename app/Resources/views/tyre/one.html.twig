@@ -13,11 +13,19 @@
                 <img class="media-object img-rounded img-responsive" width="100px" height="200px%"
                      src="{{ asset('uploads/images/tyres/' ~ tyre.image) }}"
                      alt="placehold.it/350x250">
-                <span style="margin-left: 600px;">
-                            <span class="text-warning">Price: </span><span style="font-size: 30px"
-                                                                           class="price">{{ tyre.price }}</span>
-                </span>
-
+                {% if tyre.promotionPrice != 0  %}
+                    <span style="margin-left: 500px;" >
+                    <span class="text-warning">Old Price: </span>
+                        <span style="font-size: 30px" class="price strike" id="price">{{ tyre.price }}</span>
+                        <span class="text-danger" style="padding-left: 15px">New Price </span>
+                    <span style="font-size: 40px" class="newPrice">{{ tyre.promotionPrice|number_format(2) }}</span>
+                    </span>
+                    {% else %}
+                        <span >
+                            <span class="text-warning" style="margin-left: 700px;">Price: </span>
+                            <span style="font-size: 30px" class="price"id="price">{{ tyre.price }}</span>
+                        </span>
+                {% endif %}
             </div>
             <span class="text-warning" style="bottom: auto">Quantity:  </span><span
                     class="quantity">{{ tyre.quantity }}</span> left
@@ -53,12 +61,14 @@
                 role="button">
             Add feedback for the product
         </button>
-        {% if app.User() and (app.getUser().isAdmin() or app.getUser().isSeller(tyre)) %}
+        {% if app.User() and (app.getUser().isSeller(tyre)) %}
+            {% if promotions is not empty %}
             <button id="btnComment" type="button" class="btn btn-primary" data-toggle="modal"
                     data-target="#promotionForm"
                     role="button">
                 Add Tyre To Promotion
             </button>
+                {% endif %}
         {% endif %}
     </div>
 
@@ -84,11 +94,8 @@
                     <p>{{ comment.content }}</p>
                 </div>
             </div>
-
         {% endfor %}
     </div>
-
-
 
     <div class="modal fade" id="modalForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
@@ -141,7 +148,6 @@
         </div>
     </div>
 
-
     <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -174,7 +180,6 @@
             </div>
         </div>
     </div>
-
 
     <script>
         $('#btnComment').on('click', function (event) {

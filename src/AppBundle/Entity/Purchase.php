@@ -55,13 +55,11 @@ class Purchase
      */
     private $purchasesDetails;
 
-
     public function __construct()
     {
         $this->createDate= new \DateTime('now');
         $this->purchasesDetails = new ArrayCollection();
     }
-
 
     /**
      * Get id
@@ -170,7 +168,6 @@ class Purchase
         return $this->purchasesDetails;
     }
 
-
     public function setPurchasesDetails($purchaseDetails){
         $this->purchasesDetails=$purchaseDetails;
     }
@@ -206,8 +203,5 @@ class Purchase
         }
         return $totalTyres;
     }
-
-
-
 }
 

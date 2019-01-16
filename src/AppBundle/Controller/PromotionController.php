@@ -3,12 +3,9 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Promotion;
-use AppBundle\Entity\PromotionsTyres;
-use AppBundle\Form\PromotionsTyresType;
 use AppBundle\Form\PromotionType;
 use AppBundle\Service\Promotion\PromotionServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,7 +21,6 @@ class PromotionController extends Controller
      * @var PromotionServiceInterface
      */
     private $promotionService;
-
 
     public function __construct(PromotionServiceInterface $promotionService)
     {
@@ -46,7 +42,7 @@ class PromotionController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $message = $this
                 ->promotionService
-                ->addPromotion($promotion, $id);
+                ->addPromotion($promotion, $this->getUser());
             if ($message !== '') {
                 $this->addFlash("error", $message);
             } else {
@@ -77,15 +73,14 @@ class PromotionController extends Controller
             return $this->redirectToRoute('tyres_view_mine');
         }
 
+        $message = $this->promotionService->addTyreToPromotion($promotion, $tyreId);
 
-        $result = $this->promotionService->addTyreToPromotion($promotion, $tyreId);
-
-        if ($result == false) {
-            $this->addFlash('error', 'Tyre not exist');
-            return $this->redirectToRoute('tyres_view_mine');
+        if ($message !== '') {
+            $this->addFlash('error', $message);
+            return $this->redirectToRoute('tyres_view_one',['tyreId'=>$tyreId]);
         }
-        $this->addFlash('success','Tyre add to promotion successful!');
-        return $this->redirectToRoute('tyres_view_one',['id'=>$tyreId]);
 
+        $this->addFlash('success','Tyre add to promotion successful!');
+        return $this->redirectToRoute('tyres_view_one',['tyreId'=>$tyreId]);
     }
 }

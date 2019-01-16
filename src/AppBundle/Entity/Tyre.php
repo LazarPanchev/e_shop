@@ -89,6 +89,12 @@ class Tyre
     private $price;
 
     /**
+     * @var float
+     * @ORM\Column(name="promotion_price", type="decimal" , precision=10, scale=2)
+     */
+    private $promotionPrice;
+
+    /**
      * @var int
      * @Assert\NotBlank(message="Choose price for 1 tyre")
      * @Assert\Range(
@@ -167,8 +173,8 @@ class Tyre
     {
         $this->createDate=new \DateTime('now');
         $this->comments=new  ArrayCollection();
+        $this->promotionPrice=0;
     }
-
 
     /**
      * Get id
@@ -476,6 +482,22 @@ class Tyre
     public function setQuantity(int $quantity)
     {
         $this->quantity = $quantity;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPromotionPrice(): float
+    {
+        return $this->promotionPrice;
+    }
+
+    /**
+     * @param float $promotionPrice
+     */
+    public function setPromotionPrice(float $promotionPrice)
+    {
+        $this->promotionPrice = $promotionPrice;
     }
 
     /**

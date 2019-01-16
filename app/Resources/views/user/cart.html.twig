@@ -55,13 +55,17 @@
                                  alt="placehold.it/350x250"></td>
                         {# @var tyre \AppBundle\Entity\Tyre #}
                         <td>
-                            <span style="color: darkmagenta">{{ purchaseDetail.tyre.make }}{{ purchaseDetail.tyre.model }}</span>
+                            <span style="color: darkmagenta">{{ purchaseDetail.tyre.make }} {{ purchaseDetail.tyre.model }}</span>
                             {{ purchaseDetail.tyre.width }}/{{ purchaseDetail.tyre.height }}
                             R{{ purchaseDetail.tyre.diameter }} {{ purchaseDetail.tyre.loadIndex }}{{ purchaseDetail.tyre.speedIndex }}
                         </td>
-                        <td style="text-align: right" id="pricePerTyre">{{ purchaseDetail.tyre.price }} лв.</td>
+                        {% if purchaseDetail.tyre.promotionPrice != 0  %}
+                        <td style="text-align: right; color: red" id="pricePerTyre">{{ purchaseDetail.tyre.promotionPrice }} лв.</td>
+                            {% else %}
+                                <td style="text-align: right" id="pricePerTyre">{{ purchaseDetail.tyre.price }} лв.</td>
+                        {% endif %}
                         <td>{{ purchaseDetail.tyre.quantity }}</td>
-                        <td><input type="number" id="quantity" placeholder="Choose number of tyres"
+                        <td><input type="number" id="quantity" placeholder="Choose quantity"
                                    onchange="checkQuantity(this)" name="cart[quantity{{ loop.index }}]"></td>
                         <td style="color: red; text-align: right" id="endPrice">0 лв.</td>
                         <td><a class="btn btn-danger"
@@ -85,6 +89,10 @@
             let availableQuantity = parseInt($(tr).find("td:nth-child(5)").html());
             let chosenQuantity = parseInt($(el).val());
 
+            // if(Number.isNaN(chosenQuantity)){
+            //     alert('empty string')
+            // }
+
             if (!Number.isInteger(chosenQuantity)) {
                 handleError(el)
             } else {
@@ -102,6 +110,10 @@
         }
 
         function handleError(el) {
+            let tr = el.parentNode.parentNode;
+            let currentSumElement = $(tr).find("td:nth-child(7)");
+            currentSumElement.html(0);
+            // $(currentSum).val(0);
             let errorBox = $('#error');
             errorBox.css("display", "inline");
             setTimeout(function () {

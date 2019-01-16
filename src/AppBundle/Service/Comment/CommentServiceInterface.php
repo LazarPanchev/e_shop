@@ -17,6 +17,6 @@ interface CommentServiceInterface
 {
     public function addComment(Comment $comment, int $tyreId, User $user);
 
-    public function findComments(int $tyreId);
+//    public function findComments(int $tyreId);
 
 }

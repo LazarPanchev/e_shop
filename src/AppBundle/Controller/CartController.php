@@ -76,7 +76,7 @@ class CartController extends Controller
         $purchaseDetails = $this
             ->purchaseService
             ->findPurchaseDetailsByCartId($cart->getId());
-
+        $this->tyreService->setPromotionsToPurchaseDetails($purchaseDetails);
         $purchase = new Purchase();
         $form = $this->createForm(PurchaseType::class, $purchase);
         $form->handleRequest($request);

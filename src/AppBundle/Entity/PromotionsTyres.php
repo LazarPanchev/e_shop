@@ -31,10 +31,16 @@ class PromotionsTyres
 
     /**
      * @var int
-     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Tyre", mappedBy="id")
      * @ORM\Column(name="tyreId", type="integer")
      */
     private $tyreId;
+
+    /**
+     * @var float
+     * @ORM\Column(name="promotion_price", type="decimal" , precision=10, scale=2)
+     */
+    private $promotionPrice;
 
 
 
@@ -95,4 +101,22 @@ class PromotionsTyres
     {
         return $this->tyreId;
     }
+
+    /**
+     * @return float|null
+     */
+    public function getPromotionPrice()
+    {
+        return $this->promotionPrice;
+    }
+
+    /**
+     * @param float $promotionPrice
+     */
+    public function setPromotionPrice($promotionPrice)
+    {
+        $this->promotionPrice = $promotionPrice;
+    }
+
+
 }

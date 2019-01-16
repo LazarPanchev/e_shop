@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Service\Promotion\PromotionServiceInterface;
 use AppBundle\Service\Search\SearchServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -19,13 +20,19 @@ class SearchController extends Controller
     private $searchService;
 
     /**
+     * @var PromotionServiceInterface
+     */
+    private $promotionService;
+
+    /**
      * SearchController constructor.
      * @param SearchServiceInterface $searchService
      */
-    public function __construct(SearchServiceInterface $searchService)
+    public function __construct(SearchServiceInterface $searchService,
+                                PromotionServiceInterface $promotionService)
     {
         $this->searchService = $searchService;
-
+        $this->promotionService=$promotionService;
     }
 
     /**
@@ -69,7 +76,7 @@ class SearchController extends Controller
         $tyres = $this
             ->searchService
             ->searchBySize($request);
-
+        $this->promotionService->setPromotions($tyres);
         return $this->handlePaginationProcess($tyres,$request);
     }
 
@@ -82,7 +89,7 @@ class SearchController extends Controller
         $tyres = $this
             ->searchService
             ->searchByBrand($request);
-
+        $this->promotionService->setPromotions($tyres);
         return $this->handlePaginationProcess($tyres, $request);
     }
 
@@ -95,7 +102,7 @@ class SearchController extends Controller
         $tyres= $this
             ->searchService
             ->quickSearchByBrand($brand);
-
+        $this->promotionService->setPromotions($tyres);
         return $this->handlePaginationProcess($tyres, $request);
     }
 
@@ -109,7 +116,7 @@ class SearchController extends Controller
         $tyres= $this
             ->searchService
             ->quickSearchByCategory($category);
-
+        $this->promotionService->setPromotions($tyres);
         return $this->handlePaginationProcess($tyres, $request);
     }
 
@@ -125,7 +132,7 @@ class SearchController extends Controller
         $tyres= $this
             ->searchService
             ->quickSearchBySize($width,$height,$diameter);
-
+        $this->promotionService->setPromotions($tyres);
         return $this->handlePaginationProcess($tyres, $request);
     }
 

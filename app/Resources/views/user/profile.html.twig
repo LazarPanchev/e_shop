@@ -25,7 +25,6 @@
             </a>
         </div>
         <hr/>
-        <h1 style="text-align: center; color: yellow">My Purchases</h1>
         {% if app.getUser().isEditor() %}
             <div class="container" style="text-align: center">
                 <a href="{{ path('promotions_add',{'id':app.user.id}) }}">
@@ -34,6 +33,8 @@
             </div>
             <hr/>
         {% endif %}
+        <h1 style="text-align: center; color: yellow">My Purchases</h1>
+
         {% if purchases is empty %}
             <div class="text-danger" style="text-align: center"><h2>Not purchases yet!</h2>
             </div>

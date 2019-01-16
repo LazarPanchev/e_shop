@@ -2,11 +2,9 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\PromotionsTyres;
 use AppBundle\Entity\Role;
 use AppBundle\Entity\Tyre;
 use AppBundle\Entity\User;
-use AppBundle\Form\PromotionsTyresType;
 use AppBundle\Form\TyreType;
 use AppBundle\Service\Comment\CommentServiceInterface;
 use AppBundle\Service\Promotion\PromotionServiceInterface;
@@ -72,7 +70,8 @@ class TyreController extends Controller
     {
         $tyres = $this
             ->tyreService
-            ->findAll();
+            ->findAllTyresWithPromotions();
+        $this->promotionService->setPromotions($tyres);
 
         return $this->handlePaginationProcess($tyres, $request);
     }
@@ -88,27 +87,32 @@ class TyreController extends Controller
         $currentUserId = $this
             ->getUser()
             ->getId();
-        $tyres = $this->tyreService->findById($currentUserId);
+        $tyres = $this->tyreService->findTyresWithPromotionsByUserId($currentUserId);
+        $this->promotionService->setPromotions($tyres);
         return $this->handlePaginationProcess($tyres, $request);
     }
 
 
     /**
-     * @Route("/view/{id}", name="tyres_view_one")
-     * @param int $id
-     * @param CommentServiceInterface $commentService
+     * @Route("/view/{tyreId}", name="tyres_view_one")
+     * @param int $tyreId
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function viewOneAction(int $id, CommentServiceInterface $commentService)
+    public function viewOneAction(int $tyreId)
     {
         /** @var Tyre $tyre */
-        $tyre = $this->findTyre($id);
-        $comments = $commentService->findComments($tyre->getId());
+        $tyre = $this->tyreService->findOneWithPromotionsAndComments($tyreId);
 
-        $promotions = $this
-            ->promotionService
-            ->findPromotionsBySellerId($this->getUser()->getId());
+        if(null===$tyre){
+            $this->addFlash('error', 'Tyre not exist!');
+            return $this->redirectToRoute('homepage');
+        }
 
+        $this->tyreService->increaseViewCount($tyre);
+        $this->promotionService->setPromotionsOneTyre($tyre);
+        $comments = $tyre->getComments();
+        $allPromotions = $tyre->getSeller()->getPromotions();
+        $promotions = $this->promotionService->checkPromotionsAreActive($allPromotions);
         return $this->render("tyre/one.html.twig",
             [
                 'tyre' => $tyre,
@@ -172,7 +176,7 @@ class TyreController extends Controller
     public function editAction(int $id, Request $request)
     {
         /** @var Tyre $tyre */
-        $tyre = $this->findTyre($id);
+        $tyre = $this->tyreService->findOne($id);
         $this->checkForCurrentUser($tyre);
 
         /** @var Form $form */
@@ -185,9 +189,9 @@ class TyreController extends Controller
                 return $this->render('tyre/edit.html.twig',
                     ['tyre' => $tyre, 'form' => $form->createView()]);
             }
-            $this->tyreService->create($tyre, $fileName);
+            $this->tyreService->edit($tyre, $fileName);
             $this->addFlash('success', "Tyre edited successfully.");
-            return $this->redirectToRoute('tyres_view_all');
+            return $this->redirectToRoute('tyres_view_one',['tyreId'=>$id]);
         }
         return $this->render('tyre/edit.html.twig',
             ['form' => $form->createView(), 'tyre' => $tyre]);
@@ -204,7 +208,7 @@ class TyreController extends Controller
     public function deleteAction(int $id, Request $request)
     {
         /** @var Tyre $tyre */
-        $tyre = $this->findTyre($id);
+        $tyre = $this->tyreService->findOne($id);
         $this->checkForCurrentUser($tyre);
 
         $form = $this->createForm(TyreType::class, $tyre);
@@ -234,20 +238,6 @@ class TyreController extends Controller
             $this->addFlash('error', 'Error occurred while process your request!');
             return $this->redirectToRoute('homepage');
         }
-    }
-
-    /**
-     * @param $id
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    private function findTyre($id)
-    {
-        $tyre = $this->tyreService->findOne($id);
-        if (null === $tyre) {
-            return $this->redirectToRoute('homepage');
-        }
-
-        return $tyre;
     }
 
     /**

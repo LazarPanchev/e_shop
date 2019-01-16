@@ -28,4 +28,31 @@ class PromotionsTyresRepository extends EntityRepository
         $this->_em->persist($promotionsTyre);
         $this->_em->flush();
     }
+
+    public function findPromotionByTyreIdAndDate($id, $todayDate)
+    {
+        $qb = $this->_em->createQueryBuilder()
+            ->select('promotions_tyres, promotion')
+            ->from('AppBundle:PromotionsTyres', 'promotions_tyres')
+            ->leftJoin('promotions_tyres.promotionId', 'promotion')
+            ->where('promotions_tyres.tyreId = :id')
+            ->setParameter('id',$id);
+        $qb->andWhere($qb->expr()->between(':todayDate','promotion.validFrom','promotion.validTo'))
+            ->setParameter('todayDate',$todayDate);
+
+        return $qb->getQuery()->getResult();
+
+
+    }
+
+    public function findWithPromotionsByTyreId($tyreId)
+    {
+        $qb = $this->_em->createQueryBuilder()
+            ->select('promotions_tyres, promotion')
+            ->from('AppBundle:PromotionsTyres', 'promotions_tyres')
+            ->leftJoin('promotions_tyres.promotionId', 'promotion')
+            ->where('promotions_tyres.tyreId = :tyreId')
+            ->setParameter('tyreId',$tyreId);
+        return $qb->getQuery()->getResult();
+    }
 }

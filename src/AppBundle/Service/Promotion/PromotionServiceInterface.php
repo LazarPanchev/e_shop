@@ -7,16 +7,27 @@
  */
 
 namespace AppBundle\Service\Promotion;
+
 use AppBundle\Entity\Promotion;
+use AppBundle\Entity\Tyre;
 
 interface PromotionServiceInterface
 {
-    public function addPromotion(Promotion $promotion, $userId);
+    public function addPromotion(Promotion $promotion, $user);
 
     public function findPromotionById($promotionId);
 
     public function addTyreToPromotion($promotion,$tyreId);
 
-    public function findPromotionsBySellerId($sellerId);
+    public function findTyreInPromotion($id);
 
+    public function setPromotions($tyres);
+
+    public function setPromotionsOneTyre($tyre);
+
+    public function findPromotionsTyresByTyreId($tyreId);
+
+    public function savePromotionsTyre($promotionsTyre);
+
+    public function checkPromotionsAreActive($promotions);
 }
