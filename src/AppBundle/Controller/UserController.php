@@ -28,7 +28,6 @@ class UserController extends Controller
      */
     private $purchaseService;
 
-
     public function __construct(UserServiceInterface $userService, PurchaseServiceInterface $purchaseService)
     {
         $this->userService = $userService;

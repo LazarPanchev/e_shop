@@ -86,7 +86,6 @@ class UserService implements UserServiceInterface
         return $this->userRepository->findOneBy(['email' => $email]);
     }
 
-
     public function findAll()
     {
         return $this->userRepository->findAll();
